@@ -10,6 +10,7 @@ namespace Clips_api.Data
         {
             
         }
+        
         public DbSet<Video> Videos { get; set; }
     }
 }

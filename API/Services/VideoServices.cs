@@ -16,9 +16,11 @@ namespace Clips_api.Services
         private readonly ApplicationDbContext _context;
 
         private readonly UserManager<User> _userManager;
-        public VideoServices(ApplicationDbContext context)
+
+        public VideoServices(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // All Get Methods
@@ -37,7 +39,7 @@ namespace Clips_api.Services
         {
             var video = await _context.Videos.FindAsync(id);
             var Clips = await _context.Videos.Where(a => a.created > video.created).Take(3).Include(a => a.user).ToListAsync();
-            if (Clips.IsNullOrEmpty())
+            if (Clips.Count == 0)
             {
                 var allClips = await _context.Videos.OrderByDescending(a => a.Id).Where(a => a.Id != id).Take(3).Skip(0).Include(a => a.user).ToListAsync();
                 return allClips;

@@ -1,0 +1,10 @@
+{
+    "ConnectionStrings": {
+    "DefaultConnection": ""
+    },
+    "JWT": {
+    "Key": "",
+    "ExpiredInDays": 1,
+    "Issuer": ""
+  }
+}
