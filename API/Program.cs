@@ -70,10 +70,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+var contentRootPath = app.Environment.ContentRootPath;
+var resourcesPath = Path.Combine(contentRootPath, "Resources");
+
+Directory.CreateDirectory(resourcesPath);
+Directory.CreateDirectory(Path.Combine(resourcesPath, "Uploads"));
+Directory.CreateDirectory(Path.Combine(contentRootPath, "wwwroot"));
+
 app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions()
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+    FileProvider = new PhysicalFileProvider(resourcesPath),
     RequestPath = new PathString("/Resources")
 });
 app.UseCors(a => a.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());

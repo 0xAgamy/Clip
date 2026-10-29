@@ -2,12 +2,9 @@
 using Clips_api.DTOs.Video;
 using Clips_api.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
 
 namespace Clips_api.Services
 {
@@ -31,21 +28,27 @@ namespace Clips_api.Services
 
         public async Task<Video> GetVideoAsync(int id)
         {
-             var video = await _context.Videos.Include(a=>a.user).FirstOrDefaultAsync(x => x.Id == id);
-           return video is not null ? video :null;
+            var video = await _context.Set<Video>().Include(a => a.user).FirstOrDefaultAsync(x => x.Id == id);
+            if (video == null) return null;
+            return video;
+    
         }
 
         public async Task<IEnumerable<Video>> RecommendAsync(int id)
         {
             var video = await _context.Videos.FindAsync(id);
-            var Clips = await _context.Videos.Where(a => a.created > video.created).Take(3).Include(a => a.user).ToListAsync();
-            if (Clips.Count == 0)
-            {
-                var allClips = await _context.Videos.OrderByDescending(a => a.Id).Where(a => a.Id != id).Take(3).Skip(0).Include(a => a.user).ToListAsync();
-                return allClips;
-            }
-            return Clips;
+            if (video == null) return Enumerable.Empty<Video>();
+            else
+            {               
+                var Clips = await _context.Videos.Where(a => a.created > video.created).Take(3).Include(a => a.user).ToListAsync();
+                if (Clips.Count == 0)
+                {
+                    var allClips = await _context.Videos.OrderByDescending(a => a.Id).Where(a => a.Id != id).Take(3).Skip(0).Include(a => a.user).ToListAsync();
+                    return allClips;
+                }
+                return Clips;
         }
+            }
 
 
         public async Task<IEnumerable<Video>> GetUserVideosAsync(string userId)
@@ -64,13 +67,13 @@ namespace Clips_api.Services
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
 
-            var VideoName = ContentDispositionHeaderValue.Parse(model.VideoFile.ContentDisposition).FileName.Trim('"');
-            var VdieofullPath = Path.Combine(pathToSave, VideoName);
-            var videodbPath = Path.Combine(folderName, VideoName);
+            var VideoName = ContentDispositionHeaderValue.Parse(model.VideoFile.ContentDisposition)?.FileName?.Trim('"');
+            var VdieofullPath = Path.Combine(pathToSave, VideoName!);
+            var videodbPath = Path.Combine(folderName, VideoName!);
 
-            var ImageName = ContentDispositionHeaderValue.Parse(model.thumbnail.ContentDisposition).FileName.Trim('"');
-            var ImagefullPath = Path.Combine(pathToSave, ImageName);
-            var ImageDbPath = Path.Combine(folderName, ImageName);
+            var ImageName = ContentDispositionHeaderValue.Parse(model.thumbnail.ContentDisposition)?.FileName?.Trim('"');
+            var ImagefullPath = Path.Combine(pathToSave, ImageName!);
+            var ImageDbPath = Path.Combine(folderName, ImageName!);
 
 
 
@@ -80,7 +83,7 @@ namespace Clips_api.Services
                 videoUrl = videodbPath,
                 thumbnailUrl = ImageDbPath,
                 thumbnail = model.thumbnail.FileName,
-                UserId = user.Id,
+                UserId = user!.Id,
             };
             using FileStream filestream = new (VdieofullPath, FileMode.Create);
             using FileStream imagestream = new (ImagefullPath, FileMode.Create);
@@ -101,11 +104,11 @@ namespace Clips_api.Services
         public async Task<Video> DeleteAsync(int id)
         {
             var video = await GetVideoAsync(id);
-            if (video == null) return video;
+            
 
 
-            System.IO.File.Delete(video.videoUrl);
-            System.IO.File.Delete(video.thumbnailUrl);
+            File.Delete(video.videoUrl);
+            File.Delete(video.thumbnailUrl);
 
 
             _context.Videos.Remove(video);
@@ -117,7 +120,7 @@ namespace Clips_api.Services
         public async Task<Video> EditAsync(int id, EditVideoDto model)
         {
             var video = await GetVideoAsync(id);
-            if (video == null) return video;
+            
 
             video.Title = model.Title;
             await _context.SaveChangesAsync();

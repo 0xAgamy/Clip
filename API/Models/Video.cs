@@ -12,6 +12,6 @@ namespace Clips_api.Models
         public string thumbnailUrl { get; set; }
         public string UserId { get; set; }
         public User? user { get; set; }
-        public DateTime? created { get; set; }=DateTime.Now;
+        public DateTime? created { get; set; }=DateTime.UtcNow;
     }   
 }

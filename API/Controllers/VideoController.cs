@@ -35,6 +35,7 @@ namespace Clips_api.Controllers
         public async Task<IActionResult> RecommendVideos(int id)
         {
             var Clips = await _videoServices.RecommendAsync(id);
+            if (Clips == null) return NotFound();
             return Ok(Clips);
         }
 
