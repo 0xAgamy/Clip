@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Clips_api.props" />
-</Project>
