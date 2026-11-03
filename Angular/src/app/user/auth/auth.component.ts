@@ -1,10 +1,12 @@
-import { Component,OnInit,OnDestroy } from '@angular/core';
-import { ModalService } from 'src/app/services/modal.service';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { ModalService } from '../../services/modal.service';
 
 @Component({
-  selector: 'app-auth',
-  templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+    selector: 'app-auth',
+    templateUrl: './auth.component.html',
+    styleUrls: ['./auth.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AuthComponent implements OnInit ,OnDestroy{
 

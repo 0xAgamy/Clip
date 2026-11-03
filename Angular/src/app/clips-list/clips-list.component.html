@@ -1,12 +1,11 @@
-  <!-- Clips List -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    
-    <a [routerLink]="['clip',video.id]" *ngFor="let video of Videos"
-      class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
+<!-- Clips List -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
+  @for (video of Videos; track video) {
+    <a [routerLink]="['clip',video.id]"
+      class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
       <!-- Image -->
       <img class="card-img-top rounded-tl-2xl w-full" [src]="url+video.thumbnailUrl" alt="there are and image">
-
       <!-- Shape -->
       <div class="relative">
         <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
@@ -18,24 +17,20 @@
           </div>
         </div>
       </div>
-
       <!-- Body -->
       <div class="p-8">
-
         <!-- Heading -->
         <h2 class="text-3xl mb-2">
-         {{video.title}}
+          {{video.title}}
         </h2>
-
         <!-- Name & Date -->
         <p class="mb-0">
-        {{  video.user.userName  }}&#183;
+          {{  video.user.userName  }}&#183;
           <span class="text-gray-400">{{video.created |date:'longDate'}}</span>
         </p>
-
       </div>
-
     </a>
+  }
 
 
-  </div>
+</div>

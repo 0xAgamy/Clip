@@ -5,23 +5,17 @@ import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
-@NgModule({
-  declarations: [
-    AuthComponent,
-    LoginComponent,
-    RegisterComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-  ],
-  exports:[
-    AuthComponent,
-  ]
-})
+@NgModule({ declarations: [
+        AuthComponent,
+        LoginComponent,
+        RegisterComponent
+    ],
+    exports: [
+        AuthComponent,
+    ], imports: [CommonModule,
+        SharedModule,
+        ReactiveFormsModule,
+        FormsModule], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class UserModule { }

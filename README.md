@@ -2,7 +2,7 @@
 
 Clip is a web application for sharing gaming clips. Users can register, sign in, upload videos with thumbnails, browse clips, and manage their own uploads.
 
-The project contains an Angular 15 frontend and an ASP.NET Core 10 Web API backed by PostgreSQL.
+The project contains an Angular 22 frontend and an ASP.NET Core 10 Web API backed by PostgreSQL.
 
 ## Features
 
@@ -23,7 +23,7 @@ The project contains an Angular 15 frontend and an ASP.NET Core 10 Web API backe
 | Database | PostgreSQL 16  |
 | Authentication | ASP.NET Core Identity + JWT Bearer |
 | API docs | Swashbuckle / Swagger |
-| Frontend | Angular 15, TypeScript, Tailwind CSS, Video.js |
+| Frontend | Angular 22, TypeScript 6, Tailwind CSS, Video.js |
 | Local database | Docker Compose |
 
 

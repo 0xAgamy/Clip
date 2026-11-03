@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IRegister } from '../userModels/register';
 import { delay, map, Observable, of, ReplaySubject,filter ,switchMap} from 'rxjs';
 import { ILogin } from '../userModels/login';
 import { IUser } from '../userModels/iuser';
-import { ActivatedRoute, Router , NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router , NavigationEnd, Data } from '@angular/router';
 
 
 @Injectable({
@@ -31,7 +31,7 @@ export class UserServicesService {
       filter(e=>e instanceof NavigationEnd),
       map(e=>this.activeRoute.firstChild),
       switchMap(route=>route?.data ?? of({}))
-    ).subscribe(data=>{
+    ).subscribe((data: Data)=>{
       this.redirect=data['authOnly'] ?? false
     });
   }

@@ -1,19 +1,20 @@
 import { ThisReceiver } from '@angular/compiler';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup,FormControl,Validators } from '@angular/forms';
 import { delay, Observable, takeLast } from 'rxjs';
 import { NgxCaptureService } from 'ngx-capture';
 import { VideoService } from '../services/video.service';
 import { IVideoVm } from '../model/ivideo-vm';
 import { Route, Router } from '@angular/router';
-import { UserServicesService } from 'src/app/user/UserServices/user-services.service';
-import { IUser } from 'src/app/user/userModels/iuser';
+import { UserServicesService } from '../../user/UserServices/user-services.service';
+import { IUser } from '../../user/userModels/iuser';
 
 @Component({
-  selector: 'app-upload',
-
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.css']
+    selector: 'app-upload',
+    templateUrl: './upload.component.html',
+    styleUrls: ['./upload.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class UploadComponent {
   testthubmnailfile:File|null=null

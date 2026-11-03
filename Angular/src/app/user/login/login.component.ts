@@ -1,14 +1,16 @@
 import { getLocaleCurrencySymbol } from '@angular/common';
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup,FormControl,Validators } from '@angular/forms';
 import { IUser } from '../userModels/iuser';
 import { ILogin } from '../userModels/login';
 import { UserServicesService } from '../UserServices/user-services.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LoginComponent implements OnInit{
 loginForm:FormGroup;

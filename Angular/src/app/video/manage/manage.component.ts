@@ -1,14 +1,16 @@
-import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserServicesService } from 'src/app/user/UserServices/user-services.service';
+import { UserServicesService } from '../../user/UserServices/user-services.service';
 import { IVideo } from '../model/ivideo';
 import { VideoService } from '../services/video.service';
 
 @Component({
-  selector: 'app-manage',
-  templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.css']
+    selector: 'app-manage',
+    templateUrl: './manage.component.html',
+    styleUrls: ['./manage.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ManageComponent implements OnInit,OnDestroy {
 userId:string=''

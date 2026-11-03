@@ -1,11 +1,13 @@
-import { Component, OnInit ,ViewChild,ElementRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute , Params} from '@angular/router';
 import { IVideo } from '../video/model/ivideo';
 import { VideoService } from '../video/services/video.service';
 @Component({
-  selector: 'app-clip',
-  templateUrl: './clip.component.html',
-  styleUrls: ['./clip.component.css']
+    selector: 'app-clip',
+    templateUrl: './clip.component.html',
+    styleUrls: ['./clip.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ClipComponent implements OnInit {
 id=''
