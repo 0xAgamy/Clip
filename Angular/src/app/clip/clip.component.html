@@ -1,27 +1,30 @@
- <!-- Main Content -->
- <section class="container  my-8 bg-secondary p-6">
-    <div class="rounded relative flex flex-col">
-      <!-- Title and Uploader -->
+<!-- Main Content -->
+<section class="container  my-8 bg-secondary p-6">
+  <div class="rounded relative flex flex-col">
+    <!-- Title and Uploader -->
+    @if (video) {
       <h1 class="font-bold mb-2 text-3xl">{{video.title}}</h1>
       <div class="text-gray-400 mb-6">
         Uploaded By {{video.user.userName}}
         <span>{{video.created |date:'longDate'}}</span>
       </div>
+    }
 
-      <!-- Video Editor -->
-      <div class="grid grid-cols-3 gap-2">
-        <!-- Video Player -->
-        
+    <!-- Video Editor -->
+    <div class="grid grid-cols-3 gap-2">
+      <!-- Video Player -->
+
+      @if (video) {
         <video class="col-span-2" [src]="url+video.videoUrl" type="video/mp4" width="2000" height="250" controls> </video>
-        <div>
-          <a [routerLink]="['/clip',clip.id]" *ngFor="let clip of topVideo"
-          class="grid grid-cols-4  mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-    
-          <!-- Image -->
-          <img class="card-img-top rounded-tl-2xl w-full col-span-2" [src]="url+clip.thumbnailUrl">
-    
-          <!-- Shape -->
-          <!-- <div class="">
+      }
+      <div>
+        @for (clip of topVideo; track clip) {
+          <a [routerLink]="['/clip',clip.id]"
+            class="grid grid-cols-4  mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
+            <!-- Image -->
+            <img class="card-img-top rounded-tl-2xl w-full col-span-2" [src]="url+clip.thumbnailUrl">
+            <!-- Shape -->
+            <!-- <div class="">
             <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
               <div class="absolute bottom-full w-full pb-5 overflow-hidden">
                 <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full tranform"
@@ -31,143 +34,139 @@
               </div>
             </div>
           </div> -->
-    
           <!-- Body -->
           <div class="p-1 col-span-2 text-center  " >
-    
             <!-- Heading -->
             <h2 class="text-lg p-3  mb-2">
-            {{clip.title}} 
+              {{clip.title}}
             </h2>
-  
             <!-- Name & Date -->
             <p class="mb-0">
-              {{clip.user.userName}} - 
+              {{clip.user.userName}} -
               <span class="text-gray-400">{{clip.created|date:'longDate'}}</span>
             </p>
-    
           </div>
-    
         </a>
-      
-        </div>
-    
-        
+      }
 
+    </div>
+
+
+
+  </div>
+
+</div>
+</section>
+
+<!-- More Clips -->
+<!-- <div class="container mx-auto my-8">
+<h2 class="mt-6 text-2xl">More Clips</h2>
+
+Video List
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+  <a routerLink="/clip/b"
+    class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
+
+    Image
+    <img class="card-img-top rounded-tl-2xl w-full" src="assets/img/1.jpg">
+
+    Shape
+    <div class="relative">
+      <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
+        <div class="absolute bottom-full w-full pb-5 overflow-hidden">
+          <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full tranform"
+            style="transform-origin: top center; transform: scale(2);">
+            <path d="M0 25h25L75 0h25v50H0z" fill="#283046"></path>
+          </svg>
+        </div>
       </div>
-      
     </div>
-  </section>
 
-  <!-- More Clips -->
-  <!-- <div class="container mx-auto my-8">
-    <h2 class="mt-6 text-2xl">More Clips</h2>
+    Body
+    <div class="p-8">
 
-     Video List
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <a routerLink="/clip/b"
-        class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-  
-     Image
-        <img class="card-img-top rounded-tl-2xl w-full" src="assets/img/1.jpg">
-  
-        Shape
-        <div class="relative">
-          <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
-            <div class="absolute bottom-full w-full pb-5 overflow-hidden">
-              <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full tranform"
-                style="transform-origin: top center; transform: scale(2);">
-                <path d="M0 25h25L75 0h25v50H0z" fill="#283046"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-  
-         Body 
-        <div class="p-8">
-  
-          < Heading 
-          <h2 class="text-3xl mb-2">
-            Game Highlighting Clip
-          </h2>
+      < Heading
+      <h2 class="text-3xl mb-2">
+        Game Highlighting Clip
+      </h2>
 
-        Name & Date 
-          <p class="mb-0">
-            Luis Ramirez &#183; 
-            <span class="text-gray-400">March 31, 2020</span>
-          </p>
-  
-        </div>
-  
-      </a>
-      <a href="#"
-        class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-  
-       Image 
-        <img class="card-img-top rounded-tl-2xl w-full" src="assets/img/2.jpg">
-  
-      Shape 
-        <div class="relative">
-          <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
-            <div class="absolute bottom-full w-full pb-5 overflow-hidden">
-              <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full tranform"
-                style="transform-origin: top center; transform: scale(2);">
-                <path d="M0 25h25L75 0h25v50H0z" fill="#283046"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-  
-    Body 
-        <div class="p-8">
-  
-        Heading
-          <h2 class="text-3xl mb-2">
-            Game Highlighting Clip
-          </h2>
+      Name & Date
+      <p class="mb-0">
+        Luis Ramirez &#183;
+        <span class="text-gray-400">March 31, 2020</span>
+      </p>
 
-           Name & Date 
-            Luis Ramirez &#183; 
-            <span class="text-gray-400">March 31, 2020</span>
-          </p>
-  
-        </div>
-  
-      </a>
-      <a href="#"
-        class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-  
-     Image 
-        <img class="card-img-top rounded-tl-2xl w-full" src="assets/img/3.jpg">
-  
-        Shape 
-        <div class="relative">
-          <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
-            <div class="absolute bottom-full w-full pb-5 overflow-hidden">
-              <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full tranform"
-                style="transform-origin: top center; transform: scale(2);">
-                <path d="M0 25h25L75 0h25v50H0z" fill="#283046"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-  
-        Body 
-        <div class="p-8">
-  
-        Heading 
-          <h2 class="text-3xl mb-2">
-            Game Highlighting Clip
-          </h2>
-
-      Name & Date 
-          <p class="mb-0">
-            Luis Ramirez &#183; 
-            <span class="text-gray-400">March 31, 2020</span>
-          </p>
-  
-        </div>
-  
-      </a>
     </div>
-  </div> -->
+
+  </a>
+  <a href="#"
+    class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
+
+    Image
+    <img class="card-img-top rounded-tl-2xl w-full" src="assets/img/2.jpg">
+
+    Shape
+    <div class="relative">
+      <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
+        <div class="absolute bottom-full w-full pb-5 overflow-hidden">
+          <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full tranform"
+            style="transform-origin: top center; transform: scale(2);">
+            <path d="M0 25h25L75 0h25v50H0z" fill="#283046"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    Body
+    <div class="p-8">
+
+      Heading
+      <h2 class="text-3xl mb-2">
+        Game Highlighting Clip
+      </h2>
+
+      Name & Date
+      Luis Ramirez &#183;
+      <span class="text-gray-400">March 31, 2020</span>
+    </p>
+
+  </div>
+
+</a>
+<a href="#"
+  class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
+
+  Image
+  <img class="card-img-top rounded-tl-2xl w-full" src="assets/img/3.jpg">
+
+  Shape
+  <div class="relative">
+    <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
+      <div class="absolute bottom-full w-full pb-5 overflow-hidden">
+        <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full tranform"
+          style="transform-origin: top center; transform: scale(2);">
+          <path d="M0 25h25L75 0h25v50H0z" fill="#283046"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  Body
+  <div class="p-8">
+
+    Heading
+    <h2 class="text-3xl mb-2">
+      Game Highlighting Clip
+    </h2>
+
+    Name & Date
+    <p class="mb-0">
+      Luis Ramirez &#183;
+      <span class="text-gray-400">March 31, 2020</span>
+    </p>
+
+  </div>
+
+</a>
+</div>
+</div> -->

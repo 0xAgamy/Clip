@@ -1,7 +1,8 @@
 import { Directive ,HostListener} from '@angular/core';
 
 @Directive({
-  selector: '[app-event-blocker]'
+    selector: '[app-event-blocker]',
+    standalone: false
 })
 export class EventBlockerDirective {
 

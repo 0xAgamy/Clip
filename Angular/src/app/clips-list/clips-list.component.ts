@@ -1,11 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IVideo } from '../video/model/ivideo';
 import { VideoService } from '../video/services/video.service';
 
 @Component({
-  selector: 'app-clips-list',
-  templateUrl: './clips-list.component.html',
-  styleUrls: ['./clips-list.component.css']
+    selector: 'app-clips-list',
+    templateUrl: './clips-list.component.html',
+    styleUrls: ['./clips-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ClipsListComponent implements OnInit,OnDestroy{
   Videos:IVideo[]=[];

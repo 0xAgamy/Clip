@@ -1,7 +1,9 @@
-   <app-alert *ngIf="showAlert"[color]="alertColor" >
-    {{alertMsg}}
-   </app-alert>
-   
+   @if (showAlert) {
+    <app-alert [color]="alertColor" >
+      {{alertMsg}}
+     </app-alert>
+   }
+
    <!-- Registration Form -->
    <form [formGroup]="registerForm" (ngSubmit)="Register()">
     <!-- Name -->
@@ -11,11 +13,13 @@
         class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition
           duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400"
         placeholder="Enter Name" />
-       <ng-container *ngIf="registerForm.controls.name.touched">
-        <p *ngIf="registerForm.controls.name.errors?.['required']" class="text-red-400">
+       @if (registerForm.controls.name.touched) {
+        @if (registerForm.controls.name.errors?.['required']) {
+        <p class="text-red-400">
           The Name is Required
       </p>
-       </ng-container>
+        }
+       }
 
     </div>
     <!-- Email -->
@@ -25,14 +29,18 @@
         class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition
           duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400"
         placeholder="Enter Email" />
-        <ng-container *ngIf="registerForm.controls.email.touched">
-          <p *ngIf="registerForm.controls.email.invalid && !registerForm.controls.email.errors?.['required'] " class="text-red-400">
+        @if (registerForm.controls.email.touched) {
+          @if (registerForm.controls.email.invalid && !registerForm.controls.email.errors?.['required']) {
+          <p class="text-red-400">
             The Email is invalid
           </p>
-          <p *ngIf="registerForm.controls.email.errors?.['required']" class="text-red-400">
+          }
+          @if (registerForm.controls.email.errors?.['required']) {
+          <p class="text-red-400">
             The Email is Required
           </p>
-        </ng-container>
+          }
+        }
     </div>
     <!-- Age -->
     <div class="mb-3">
@@ -40,17 +48,23 @@
       <input formControlName="age" type="number"
         class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition
           duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400" placeholder="Enter Age"/>
-          <ng-container *ngIf="Age.touched" >
-              <div *ngIf="Age.errors?.['required']" class="text-red-400">
+          @if (Age.touched) {
+              @if (Age.errors?.['required']) {
+              <div class="text-red-400">
                   The Age is Required
               </div>
-              <div *ngIf="Age.errors?.['min']" class="text-red-400">
+              }
+              @if (Age.errors?.['min']) {
+              <div class="text-red-400">
                   The value is too low
               </div>
-              <div *ngIf="Age.errors?.['max']" class="text-red-400">
+              }
+              @if (Age.errors?.['max']) {
+              <div class="text-red-400">
                   You're a very old man , The Value is too high
               </div>
-          </ng-container>
+              }
+          }
 
     </div>
     <!-- Password -->
@@ -60,17 +74,23 @@
         class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition
           duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400"
         placeholder="Password" />
-        <div *ngIf="registerForm.controls.password.touched" class="text-red-400">
+        @if (registerForm.controls.password.touched) {
+        <div class="text-red-400">
         
-            <small *ngIf=" Password.invalid  &&   !Password.errors?.['required']">
+            @if (Password.invalid && !Password.errors?.['required']) {
+            <small>
                 at least 8 characters
               , must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
             
             </small>
-            <small *ngIf="registerForm.controls.password.errors?.['required']">
+            }
+            @if (registerForm.controls.password.errors?.['required']) {
+            <small>
                 The Password is Required
             </small>
+            }
         </div>
+        }
 
     </div>
     <!-- Confirm Password -->
@@ -80,11 +100,13 @@
         class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition
           duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400"
         placeholder="Confirm Password" formControlName="confirm_password" />
-      <ng-container *ngIf="confirmPassword.touched"  >
-          <div *ngIf="Password.value!=confirmPassword.value" class="text-red-400">
+      @if (confirmPassword.touched) {
+          @if (Password.value!=confirmPassword.value) {
+          <div class="text-red-400">
               Confirm Password doesn't match Password
           </div>
-      </ng-container>    
+          }
+      }
     </div>
     <!-- Phone Number -->
     <div class="mb-3">
@@ -94,10 +116,14 @@
           duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400"
         placeholder="Enter Phone Number" formControlName="phoneNumber"/>
 
-        <ng-container *ngIf="registerForm.controls.phoneNumber.touched" >
-          <p *ngIf="registerForm.controls.phoneNumber.invalid&&!registerForm.controls.phoneNumber.errors?.['required']" class="text-red-400">The Phone Number Is Invalid</p>
-          <p *ngIf="registerForm.controls.phoneNumber.errors?.['required']"class="text-red-400">The Phone Number Is Required</p>
-        </ng-container>
+        @if (registerForm.controls.phoneNumber.touched) {
+          @if (registerForm.controls.phoneNumber.invalid && !registerForm.controls.phoneNumber.errors?.['required']) {
+          <p class="text-red-400">The Phone Number Is Invalid</p>
+          }
+          @if (registerForm.controls.phoneNumber.errors?.['required']) {
+          <p class="text-red-400">The Phone Number Is Required</p>
+          }
+        }
     </div>
     <button type="submit"
       [disabled]="registerForm.invalid"

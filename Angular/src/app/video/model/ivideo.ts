@@ -1,4 +1,4 @@
-import { IUser } from "src/app/user/userModels/iuser";
+import { IUser } from "../../user/userModels/iuser";
 
 export interface IVideo {
     id:number,

@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup,FormControl,Validators } from '@angular/forms';
 import { IRegister } from '../userModels/register';
 import { UserServicesService } from '../UserServices/user-services.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 // min Validator for Nubmers  , and minLength validator for strings
 export class RegisterComponent {

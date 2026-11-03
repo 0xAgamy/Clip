@@ -1,31 +1,33 @@
- <!-- Login Form -->
- <form [formGroup]="loginForm" (submit)="login()">
-  <app-alert *ngIf="showAlert"  [color]="alertColor">
-    {{alertMsg}}
-   </app-alert>
-    <!-- Email -->
-    <div class="mb-3">
-      <label class="inline-block mb-2">Email</label>
-      <input type="email"
+<!-- Login Form -->
+<form [formGroup]="loginForm" (submit)="login()">
+  @if (showAlert) {
+    <app-alert  [color]="alertColor">
+      {{alertMsg}}
+    </app-alert>
+  }
+  <!-- Email -->
+  <div class="mb-3">
+    <label class="inline-block mb-2">Email</label>
+    <input type="email"
         class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition
           duration-500 focus:outline-none rounded bg-transparent
           focus:border-indigo-400"
-        placeholder="Enter Email" formControlName="email" />
-    </div>
-    <!-- Password -->
-    <div class="mb-3">
-      <label class="inline-block mb-2">Password</label>
-      <input type="password"
+      placeholder="Enter Email" formControlName="email" />
+  </div>
+  <!-- Password -->
+  <div class="mb-3">
+    <label class="inline-block mb-2">Password</label>
+    <input type="password"
         class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition
         duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400"
-        placeholder="Password" formControlName="password"/>
-    </div>
+      placeholder="Password" formControlName="password"/>
+  </div>
 
 
-    <button type="submit"
-      [disabled]="loginForm.invalid"
+  <button type="submit"
+    [disabled]="loginForm.invalid"
       class="block w-full bg-indigo-400 text-white py-1.5 px-3 rounded transition
         hover:bg-indigo-500  disabled:opacity-50 disabled:bg-indigo-400">
-      Submit
-    </button>
-  </form>
+    Submit
+  </button>
+</form>

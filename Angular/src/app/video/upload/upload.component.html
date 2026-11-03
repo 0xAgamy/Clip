@@ -1,93 +1,87 @@
-  <!-- Main Content -->
-  <section class="container mx-auto my-8 bg-secondary p-6">
-    <div class="rounded relative flex flex-col">
-      <div class="font-bold mb-6">Upload Video</div>
+<!-- Main Content -->
+<section class="container mx-auto my-8 bg-secondary p-6">
+  <div class="rounded relative flex flex-col">
+    <div class="font-bold mb-6">Upload Video</div>
 
-      <!-- Upload Dropbox -->
-      <div 
-      *ngIf="!nextstep; else uploadFromCtr"
-      
-      app-event-blocker
-      (dragend)="isDragOver=false"
-      (dragover)="isDragOver=true"
-      (dragenter)="isDragOver=true"
-      (dragleave)="isDragOver=false"
-      (mouseleave)="isDragOver=false"
-      
-      (drop)="storeFile($event) "
-      [ngClass]="{'bg-indigo-400 border-indigo-400 border-solid' : isDragOver}"
+    <!-- Upload Dropbox -->
+    @if (!nextstep) {
+      <div
+        app-event-blocker
+        (dragend)="isDragOver=false"
+        (dragover)="isDragOver=true"
+        (dragenter)="isDragOver=true"
+        (dragleave)="isDragOver=false"
+        (mouseleave)="isDragOver=false"
+        (drop)="storeFile($event) "
+        [ngClass]="{'bg-indigo-400 border-indigo-400 border-solid' : isDragOver}"
         class="w-full px-10 py-40 rounded text-center cursor-pointer border border-dashed
           border-gray-400 transition duration-500 hover:text-white
           hover:bg-indigo-400 hover:border-indigo-400 hover:border-solid text-xl">
         <h5>Drop your file here (mp4 only!)</h5>
       </div>
-
-      <!-- Video Editor -->
-      <ng-template #uploadFromCtr>
-        
-          <div class="mb-3">
-            <video #capture [src]="videosource" type="video/mp4" width="2000" height="1000" controls> </video>
-        </div>
-        
-        
-
-        <!-- Form -->
-        <form [formGroup]="videoForm" (ngSubmit)="uploadVideo()">
-          <!-- Screenshots -->
-          <h2 class="mb-4 text-xl"> Thumbnail
-            <div class="mt-4 text-center">
-              <p (click)="captureImages()"  class=" btn inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none">
-                Select Thumbnail Image
-              </p>
-            </div>
-          </h2>
-          
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" >
-            <div class="border-8 cursor-pointer border-green-400"  >
-                  <!-- <input type="file" hidden (mouseover)="Getthumbnail($event)" [value]="img" > -->
-                   <img [src]="screenshot" #img >
-            </div>
-          
+    } @else {
+      <div class="mb-3">
+        <video #capture [src]="videosource" type="video/mp4" width="2000" height="1000" controls> </video>
+      </div>
+      <!-- Form -->
+      <form [formGroup]="videoForm" (ngSubmit)="uploadVideo()">
+        <!-- Screenshots -->
+        <h2 class="mb-4 text-xl"> Thumbnail
+          <div class="mt-4 text-center">
+            <p (click)="captureImages()"  class=" btn inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none">
+              Select Thumbnail Image
+            </p>
           </div>
-
-          <!-- Title -->
-          <div class="mt-4">
-            <label class="block text-xl mb-4">Title</label>
+        </h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" >
+          <div class="border-8 cursor-pointer border-green-400"  >
+            <!-- <input type="file" hidden (mouseover)="Getthumbnail($event)" [value]="img" > -->
+            <img [src]="screenshot" #img >
+          </div>
+        </div>
+        <!-- Title -->
+        <div class="mt-4">
+          <label class="block text-xl mb-4">Title</label>
             <input formControlName="title"  type="text" class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition
             duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400">
-              <p *ngIf="videoForm.controls.title?.errors?.['required']" class="text-red-400">
-                    The Field is Required
-              </p>
-              <p *ngIf="!videoForm.controls.title?.errors?.['required'] && videoForm.controls.title?.errors?.['minlength']" class="text-red-400">
-                    The Field Must Contain 3 characters at least
-              </p>
-          </div>
-          <app-alert *ngIf="showAlert" [color]="alertColor" >
+          @if (videoForm.controls.title?.errors?.['required']) {
+            <p class="text-red-400">
+              The Field is Required
+            </p>
+          }
+          @if (!videoForm.controls.title?.errors?.['required'] && videoForm.controls.title?.errors?.['minlength']) {
+            <p class="text-red-400">
+              The Field Must Contain 3 characters at least
+            </p>
+          }
+        </div>
+        @if (showAlert) {
+          <app-alert [color]="alertColor" >
             {{alertMesg}}
           </app-alert>
-          <div class="mt-4 text-right">
-            <button [disabled]="inSubmission || screenshot==''" 
+        }
+        <div class="mt-4 text-right">
+          <button [disabled]="inSubmission || screenshot==''"
             [ngClass]="{
               'opacity-50':inSubmission  || screenshot=='',
               'hover:bg-indigo-700':!inSubmission || screenshot==''
             }
             "
-            type="submit" class=" inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 focus:outline-none">
-              Publish
-            </button>
-          
-          </div>
-          <div class="mt-4 text-right">
-            <button (click)="backToUpload()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none">
-              Back To Upload
-            </button>
-    
-          </div>
-        
-        </form>
-      </ng-template>
+          type="submit" class=" inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 focus:outline-none">
+          Publish
+        </button>
+      </div>
+      <div class="mt-4 text-right">
+        <button (click)="backToUpload()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none">
+          Back To Upload
+        </button>
+      </div>
+    </form>
+  }
 
-    
-    </div>
-  </section>
+  <!-- Video Editor -->
+
+
+</div>
+</section>
 
