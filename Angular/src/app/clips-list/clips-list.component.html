@@ -5,7 +5,8 @@
     <a [routerLink]="['clip',video.id]"
       class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
       <!-- Image -->
-      <img class="card-img-top rounded-tl-2xl w-full" [src]="url+video.thumbnailUrl" alt="there are and image">
+      <img class="card-img-top rounded-tl-2xl w-full" [src]="video.thumbnailUrl" alt="there are and image">
+      
       <!-- Shape -->
       <div class="relative">
         <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">

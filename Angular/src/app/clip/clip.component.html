@@ -15,14 +15,14 @@
       <!-- Video Player -->
 
       @if (video) {
-        <video class="col-span-2" [src]="url+video.videoUrl" type="video/mp4" width="2000" height="250" controls> </video>
+        <video class="col-span-2" [src]="video.videoUrl" type="video/mp4" width="2000" height="250" controls> </video>
       }
       <div>
-        @for (clip of topVideo; track clip) {
+        @for (clip of topVideo; track clip.id) {
           <a [routerLink]="['/clip',clip.id]"
             class="grid grid-cols-4  mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
             <!-- Image -->
-            <img class="card-img-top rounded-tl-2xl w-full col-span-2" [src]="url+clip.thumbnailUrl">
+            <img class="card-img-top rounded-tl-2xl w-full col-span-2" src="{{clip.thumbnailUrl}}" [alt]="clip.title" >
             <!-- Shape -->
             <!-- <div class="">
             <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">

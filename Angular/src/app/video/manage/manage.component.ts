@@ -16,9 +16,8 @@ export class ManageComponent implements OnInit,OnDestroy {
 userId:string=''
 private subescripe!:Subscription
 UserVideos:IVideo[]=[]
-url
   constructor(private router:Router , private activeRouter:ActivatedRoute ,private videoServices:VideoService,private UserServices:UserServicesService) {
-    this.url=this.videoServices.baseUrl
+
   }
 ngOnInit() {
     // this.activeRouter.queryParamMap.subscribe(  (params:Params)=>{

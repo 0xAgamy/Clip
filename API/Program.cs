@@ -1,10 +1,10 @@
+using Amazon.S3;
 using Clips_api.Data;
 using Clips_api.Models;
 using Clips_api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -28,6 +28,28 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 builder.Services.AddScoped<JWTservice>();
 builder.Services.AddScoped<IvideoServices, VideoServices>();
+
+
+
+
+// Add AWS S3 service and file storage service
+var s3Config= new AmazonS3Config
+{
+    ServiceURL= builder.Configuration["S3:ServiceUrl"],
+    ForcePathStyle = builder.Configuration.GetValue<bool>("S3:ForcePathStyle", true),
+    AuthenticationRegion = builder.Configuration["S3:Region"] ?? "us-east-1",
+    
+    UseHttp=builder.Configuration.GetValue<bool>("S3:UseHttp", false)
+    
+};
+builder.Services.AddSingleton<IAmazonS3>(sp => new AmazonS3Client(
+    builder.Configuration["S3:AccessKey"],
+    builder.Configuration["S3:SecretKey"],
+    
+    
+    s3Config));
+builder.Services.AddScoped<IFileStorageService, S3StorageService>();
+
 
 builder.Services.AddIdentityCore<User>(o =>
 {
@@ -70,19 +92,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var contentRootPath = app.Environment.ContentRootPath;
-var resourcesPath = Path.Combine(contentRootPath, "Resources");
 
-Directory.CreateDirectory(resourcesPath);
-Directory.CreateDirectory(Path.Combine(resourcesPath, "Uploads"));
-Directory.CreateDirectory(Path.Combine(contentRootPath, "wwwroot"));
-
-app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions()
-{
-    FileProvider = new PhysicalFileProvider(resourcesPath),
-    RequestPath = new PathString("/Resources")
-});
 app.UseCors(a => a.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthentication();
 app.UseAuthorization();

@@ -2,9 +2,7 @@
 using Clips_api.DTOs.Video;
 using Clips_api.Models;
 using Microsoft.AspNetCore.Identity;
-
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Headers;
 
 namespace Clips_api.Services
 {
@@ -13,23 +11,36 @@ namespace Clips_api.Services
         private readonly ApplicationDbContext _context;
 
         private readonly UserManager<User> _userManager;
+        private readonly IFileStorageService _storage;
 
-        public VideoServices(ApplicationDbContext context, UserManager<User> userManager)
+        public VideoServices(ApplicationDbContext context, UserManager<User> userManager, IFileStorageService storage)
         {
             _context = context;
             _userManager = userManager;
+            _storage=storage;
         }
 
         // All Get Methods
         public async Task<IEnumerable<Video>> GetAllAsync()
         {
-            return await _context.Videos.Include(a=>a.user).ToListAsync();
+            var videos = await _context.Videos.Include(a=>a.user).ToListAsync();
+            if (videos is null) return Enumerable.Empty<Video>();
+            foreach (var vd in videos)
+            {
+                vd.videoUrl = await _storage.GetPresignedUrlAsync(vd.videoUrl);
+                vd.thumbnailUrl= await _storage.GetPresignedUrlAsync(vd.thumbnailUrl);
+
+            }
+            return videos;
         }
 
         public async Task<Video> GetVideoAsync(int id)
         {
             var video = await _context.Set<Video>().Include(a => a.user).FirstOrDefaultAsync(x => x.Id == id);
             if (video == null) return null;
+            video.videoUrl= await _storage.GetPresignedUrlAsync(video.videoUrl);
+            video.thumbnailUrl= await _storage.GetPresignedUrlAsync(video.thumbnailUrl);
+
             return video;
     
         }
@@ -61,38 +72,27 @@ namespace Clips_api.Services
 
         public async Task<Video> Upload(VideoDto model)
         {
-            var user = await _userManager.FindByEmailAsync(model.UserEmail);
+             var user = await _userManager.FindByEmailAsync(model.UserEmail);
 
-            var folderName = Path.Combine("Resources", "Uploads");
-            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            using var videoStream= model.VideoFile.OpenReadStream();
+            using var thumbStream= model.thumbnail.OpenReadStream();
+            
+            var videoKey= await _storage.UploadAsync(videoStream, model.VideoFile.FileName,
+                                                    model.VideoFile.ContentType,"videos");
 
-
-            var VideoName = ContentDispositionHeaderValue.Parse(model.VideoFile.ContentDisposition)?.FileName?.Trim('"');
-            var VdieofullPath = Path.Combine(pathToSave, VideoName!);
-            var videodbPath = Path.Combine(folderName, VideoName!);
-
-            var ImageName = ContentDispositionHeaderValue.Parse(model.thumbnail.ContentDisposition)?.FileName?.Trim('"');
-            var ImagefullPath = Path.Combine(pathToSave, ImageName!);
-            var ImageDbPath = Path.Combine(folderName, ImageName!);
-
-
-
-            Video video = new()
+            var thumbnailKey = await _storage.UploadAsync(thumbStream, model.thumbnail.FileName,
+                                                         model.thumbnail.ContentType, "thumbnails");
+            
+            var video = new Video
             {
-                Title = model.title,
-                videoUrl = videodbPath,
-                thumbnailUrl = ImageDbPath,
-                thumbnail = model.thumbnail.FileName,
-                UserId = user!.Id,
+                Title        = model.title,
+                UserId       = user!.Id,
+                videoUrl     = videoKey,      
+                thumbnail    = model.thumbnail.FileName,  
+                thumbnailUrl = thumbnailKey,  
+                created      = DateTime.UtcNow
             };
-            using FileStream filestream = new (VdieofullPath, FileMode.Create);
-            using FileStream imagestream = new (ImagefullPath, FileMode.Create);
 
-
-            model.VideoFile.CopyTo(filestream);
-            model.thumbnail.CopyTo(imagestream);
-            filestream.Close();
-            imagestream.Close();
 
             await _context.Videos.AddAsync(video);
             await _context.SaveChangesAsync();
@@ -107,8 +107,9 @@ namespace Clips_api.Services
             
 
 
-            File.Delete(video.videoUrl);
-            File.Delete(video.thumbnailUrl);
+            await _storage.DeleteAsync(video.videoUrl);
+            await _storage.DeleteAsync(video.thumbnailUrl);
+            
 
 
             _context.Videos.Remove(video);

@@ -8,7 +8,7 @@
 
     <!-- Video Editor -->
       <div class="mb-3">
-        <video #capture [src]="url+Video.videoUrl" type="video/mp4" width="2000" height="1000" controls> </video>
+        <video #capture [src]="Video.videoUrl" type="video/mp4" width="2000" height="1000" controls> </video>
       </div>
       <!-- Form -->
       <form [formGroup]="videoForm" (ngSubmit)="Edit()" >

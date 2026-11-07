@@ -24,8 +24,6 @@ alertColor='blue';
 alertMesg='Please Wait ! Your Clip is being uploaded.'
 inSubmission=false;
 
-
-  url
   title = new FormControl('',[Validators.required,Validators.minLength(3)])
   videoForm=new FormGroup({
     title:this.title
@@ -33,7 +31,7 @@ inSubmission=false;
     constructor(private VideoServices:VideoService,
       private activeRouter:ActivatedRoute,
       ) {
-        this.url= this.VideoServices.baseUrl
+
     }
 
     ngOnInit() {

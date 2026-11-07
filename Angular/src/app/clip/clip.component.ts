@@ -12,12 +12,10 @@ import { VideoService } from '../video/services/video.service';
 export class ClipComponent implements OnInit {
 id=''
 video!:IVideo;
-url
 
 topVideo:IVideo[]=[]
 @ViewChild('videoPlayer',{static:true}) target?:ElementRef
 constructor( public router:ActivatedRoute,private videoServices:VideoService) {
-    this.url=this.videoServices.baseUrl
     }
     ngOnInit(): void {
     this.router.params.subscribe((params:Params)=>{

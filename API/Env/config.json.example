@@ -6,5 +6,14 @@
     "Key": "",
     "ExpiredInDays": 1,
     "Issuer": ""
-  }
+  },
+
+  "S3": {
+  "ServiceUrl": "",
+  "AccessKey": "",
+  "SecretKey": "",
+  "BucketName": "",
+  "ForcePathStyle": true,
+  "PresignExpiryMinutes": 120
+}
 }

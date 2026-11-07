@@ -11,9 +11,7 @@ import { VideoService } from '../video/services/video.service';
 })
 export class ClipsListComponent implements OnInit,OnDestroy{
   Videos:IVideo[]=[];
-  url:string=''
   constructor(private videoServices:VideoService) {
-    this.url=videoServices.baseUrl
   }
 
 
