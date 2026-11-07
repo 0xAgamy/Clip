@@ -21,10 +21,10 @@ namespace Clips_api.Services
         }
 
         // All Get Methods
-        public async Task<IEnumerable<Video>> GetAllAsync()
+        public async Task<IEnumerable<Video?>> GetAllAsync()
         {
             var videos = await _context.Videos.Include(a=>a.user).ToListAsync();
-            if (videos is null) return Enumerable.Empty<Video>();
+            if (videos is null) return null;
             foreach (var vd in videos)
             {
                 vd.videoUrl = await _storage.GetPresignedUrlAsync(vd.videoUrl);
@@ -70,7 +70,7 @@ namespace Clips_api.Services
 
         //  Post Methods
 
-        public async Task<Video> Upload(VideoDto model)
+        public async Task<Video> Upload(UploadVideoDto model)
         {
              var user = await _userManager.FindByEmailAsync(model.UserEmail);
 

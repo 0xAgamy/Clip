@@ -29,7 +29,22 @@ namespace Clips_api.Controllers
         {
             var allVideo = await _videoServices.GetAllAsync();
             if (!ModelState.IsValid) return BadRequest("Something bad Happen");
-                     return Ok(allVideo);
+            if (allVideo == null) return NotFound("No Videos Found");
+            var allVideoList = new List<VideoDto>();
+
+            foreach (var vd in allVideo)
+            {
+                allVideoList.Add(new VideoDto
+                {
+                    Id = vd.Id,
+                    Title = vd.Title,
+                    videoUrl = vd.videoUrl,
+                    thumbnailUrl = vd.thumbnailUrl,
+                    UserName = vd.user?.UserName,
+                    created = vd.created
+                });
+            }
+            return Ok(allVideoList);
         }
         [HttpGet("recommend/{id}")]
         public async Task<IActionResult> RecommendVideos(int id)
@@ -45,7 +60,17 @@ namespace Clips_api.Controllers
             var video = await _videoServices.GetVideoAsync(id);
             if (video == null) return NotFound("The Video not Exist");
             if (!ModelState.IsValid) return BadRequest("Something bad Happen");
-            return Ok(video);
+
+            var videoDto= new VideoDto
+            {
+                Id = video.Id,
+                Title = video.Title,
+                videoUrl = video.videoUrl,
+                thumbnailUrl = video.thumbnailUrl,
+                UserName = video.user?.UserName,
+                created = video.created
+            };
+            return Ok(videoDto);
         }
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserVideos(string userId)
@@ -56,7 +81,7 @@ namespace Clips_api.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> UploadVideo([FromForm]VideoDto model)
+        public async Task<IActionResult> UploadVideo([FromForm]UploadVideoDto model)
         {
             var video = await _videoServices.Upload(model);
             return Ok(video);

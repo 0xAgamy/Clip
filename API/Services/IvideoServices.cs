@@ -7,7 +7,7 @@ namespace Clips_api.Services
     public interface IvideoServices
     {
         // Get Methods
-        public  Task<IEnumerable<Video>> GetAllAsync();
+        public  Task<IEnumerable<Video?>> GetAllAsync();
         public Task<IEnumerable<Video>> RecommendAsync(int id);
 
         public Task<IEnumerable<Video>> GetUserVideosAsync(string userId);
@@ -15,7 +15,7 @@ namespace Clips_api.Services
         public Task<Video> GetVideoAsync(int id);
 
         // Post Methods
-        public Task<Video> Upload(VideoDto model);
+        public Task<Video> Upload(UploadVideoDto model);
 
         // Edit
 

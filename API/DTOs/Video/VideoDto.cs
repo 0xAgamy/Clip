@@ -1,10 +1,14 @@
-﻿namespace Clips_api.DTOs.Video
-{
-    public class VideoDto
-    {
-        public IFormFile VideoFile { get; set; }
-        public IFormFile thumbnail { get; set; }
-        public string UserEmail { get; set; }
-        public string title { get; set; }
-    }
+public class VideoDto{
+    
+    public int Id { get; set; }
+    public string Title { get;set; }
+
+    public string videoUrl { get; set; }
+
+    public string thumbnailUrl { get; set; }
+    public string UserName { get; set; }
+
+    public DateTime? created { get; set; }
+
+
 }
