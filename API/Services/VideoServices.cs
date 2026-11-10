@@ -34,7 +34,7 @@ namespace Clips_api.Services
             return videos;
         }
 
-        public async Task<Video> GetVideoAsync(int id)
+        public async Task<Video?> GetVideoAsync(int id)
         {
             var video = await _context.Set<Video>().Include(a => a.user).FirstOrDefaultAsync(x => x.Id == id);
             if (video == null) return null;
@@ -45,22 +45,6 @@ namespace Clips_api.Services
     
         }
 
-        public async Task<IEnumerable<Video>> RecommendAsync(int id)
-        {
-            var video = await _context.Videos.FindAsync(id);
-            if (video == null) return Enumerable.Empty<Video>();
-            else
-            {               
-                var Clips = await _context.Videos.Where(a => a.created > video.created).Take(3).Include(a => a.user).ToListAsync();
-                if (Clips.Count == 0)
-                {
-                    var allClips = await _context.Videos.OrderByDescending(a => a.Id).Where(a => a.Id != id).Take(3).Skip(0).Include(a => a.user).ToListAsync();
-                    return allClips;
-                }
-                return Clips;
-        }
-            }
-
 
         public async Task<IEnumerable<Video>> GetUserVideosAsync(string userId)
         {
@@ -70,9 +54,9 @@ namespace Clips_api.Services
 
         //  Post Methods
 
-        public async Task<Video> Upload(UploadVideoDto model)
+        public async Task<Video> Upload(UploadVideoDto model, string userEmail)
         {
-             var user = await _userManager.FindByEmailAsync(model.UserEmail);
+            var user = await _userManager.FindByEmailAsync(userEmail);
 
             using var videoStream= model.VideoFile.OpenReadStream();
             using var thumbStream= model.thumbnail.OpenReadStream();
@@ -101,9 +85,10 @@ namespace Clips_api.Services
         }
 
         // Delete
-        public async Task<Video> DeleteAsync(int id)
+        public async Task<Video?> DeleteAsync(int id)
         {
-            var video = await GetVideoAsync(id);
+            var video = await _context.Videos.FindAsync(id);
+            if (video is null) return null;
             
 
 
@@ -118,9 +103,10 @@ namespace Clips_api.Services
         }
 
         // Edit 
-        public async Task<Video> EditAsync(int id, EditVideoDto model)
+        public async Task<Video?> EditAsync(int id, EditVideoDto model)
         {
-            var video = await GetVideoAsync(id);
+            var video = await _context.Videos.FindAsync(id);
+            if (video is null) return null;
             
 
             video.Title = model.Title;

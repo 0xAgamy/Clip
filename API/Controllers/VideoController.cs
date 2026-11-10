@@ -1,13 +1,10 @@
-﻿using Clips_api.Data;
-using Clips_api.DTOs.Video;
-using Clips_api.Models;
+﻿using Clips_api.DTOs.Video;
 using Clips_api.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Net.Http.Headers;
+
+using System.Security.Claims;
 
 namespace Clips_api.Controllers
 {
@@ -46,13 +43,6 @@ namespace Clips_api.Controllers
             }
             return Ok(allVideoList);
         }
-        [HttpGet("recommend/{id}")]
-        public async Task<IActionResult> RecommendVideos(int id)
-        {
-            var Clips = await _videoServices.RecommendAsync(id);
-            if (Clips == null) return NotFound();
-            return Ok(Clips);
-        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVideoWithID(int id)
@@ -81,13 +71,28 @@ namespace Clips_api.Controllers
         }
         
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> UploadVideo([FromForm]UploadVideoDto model)
         {
-            var video = await _videoServices.Upload(model);
-            return Ok(video);
+            
+            var userEmail= User.FindFirstValue(ClaimTypes.Email);
+            try{
+                
+            await _videoServices.Upload(model,userEmail);
+            return Ok();
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest();
+            }
+
+            
+            
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteClip(int id)
         {
             var clip = await _videoServices.DeleteAsync(id);
@@ -97,6 +102,8 @@ namespace Clips_api.Controllers
 
 
         [HttpPut("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> EditClip(int id ,EditVideoDto model)
         {
             var video = await _videoServices.EditAsync(id, model);

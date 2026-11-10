@@ -1,4 +1,3 @@
-using System;
 using Amazon.S3;
 using Amazon.S3.Model;
 
@@ -19,14 +18,18 @@ public class S3StorageService : IFileStorageService
         _presignExpiryMinutes = int.TryParse(config["S3:PresignExpiryMinutes"], out var expiry) ? expiry : 120;
         _logger = logger;
     }
-    public Task DeleteAsync(string ObjectKey, CancellationToken ct = default)=>
-        _s3.DeleteObjectAsync(
+    public async Task DeleteAsync(string ObjectKey, CancellationToken ct = default)
+    {
+
+        await _s3.DeleteObjectAsync(
                 new DeleteObjectRequest
                 {
                     BucketName=_bucketName,
                     Key=ObjectKey
                 }, ct
         );
+    }
+        
    
 
     public Task<string> GetPresignedUrlAsync(string ObjectKey, CancellationToken ct = default)
