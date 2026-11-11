@@ -6,7 +6,7 @@ import { NgxCaptureService } from 'ngx-capture';
 import { VideoService } from '../services/video.service';
 import { IVideoVm } from '../model/ivideo-vm';
 import { Route, Router } from '@angular/router';
-import { UserServicesService } from '../../user/UserServices/user-services.service';
+import { UserServices } from '../../user/UserServices/user-services.service';
 import { IUser } from '../../user/userModels/iuser';
 
 @Component({
@@ -41,7 +41,7 @@ export class UploadComponent {
      constructor(private ngxCap:NgxCaptureService
       ,private VideoServices:VideoService
       ,private Route:Router
-      ,private userServices:UserServicesService) {
+      ,private userServices:UserServices) {
       this.userServices.user$.subscribe(user=>{
         this.UserEmail=user?.email
       })

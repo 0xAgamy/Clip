@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ModalService } from '../services/modal.service';
-import { UserServicesService } from '../user/UserServices/user-services.service';
+import { UserServices } from '../user/UserServices/user-services.service';
 
 @Component({
     selector: 'app-nav',
@@ -11,7 +11,7 @@ import { UserServicesService } from '../user/UserServices/user-services.service'
 })
 export class NavComponent {
  name?:string=''; 
-constructor(public modal:ModalService,public user:UserServicesService) {
+constructor(public modal:ModalService,public user:UserServices) {
       this.name=this.user.userName.toUpperCase();    
       console.log(this.name)
     }

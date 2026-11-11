@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, } from '@angular/common/http';
 
 import { UserModule } from './user/user.module';
 import { HomeComponent } from './home/home.component';
@@ -14,6 +14,9 @@ import { ClipComponent } from './clip/clip.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NgxCaptureModule } from 'ngx-capture';
 import { ClipsListComponent } from './clips-list/clips-list.component';
+import {authInterceptor} from './shared/interceptors/auth.interceptor'
+import {errorInterceptor} from './shared/interceptors/error.interceptor'
+
 
 @NgModule({ declarations: [
         AppComponent,
@@ -23,10 +26,18 @@ import { ClipsListComponent } from './clips-list/clips-list.component';
         ClipComponent,
         NotFoundComponent,
         ClipsListComponent,
+        
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         VideoModule,
         AppRoutingModule,
         UserModule,
-        NgxCaptureModule], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
+        NgxCaptureModule], providers:
+         [provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
+
+
+
+         ]
+        
+    })
 export class AppModule { }

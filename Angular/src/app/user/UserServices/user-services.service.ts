@@ -5,12 +5,14 @@ import { delay, map, Observable, of, ReplaySubject,filter ,switchMap} from 'rxjs
 import { ILogin } from '../userModels/login';
 import { IUser } from '../userModels/iuser';
 import { ActivatedRoute, Router , NavigationEnd, Data } from '@angular/router';
+import {API_BASE_URL} from '../../shared/api-shared'
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserServicesService {
+export class UserServices {
+  baseUrl=API_BASE_URL
   httpOptions
   private redirect=false;
   private userSource= new ReplaySubject<IUser|null>(1);
@@ -37,11 +39,11 @@ export class UserServicesService {
   }
   
   register(modal:IRegister):Observable<IRegister>{
-    return this.httpClient.post<IRegister>("https://localhost:7120/api/Account/Register",modal,this.httpOptions)
+    return this.httpClient.post<IRegister>(`${this.baseUrl}/api/Account/Register`,modal,this.httpOptions)
   }
 
   Login(modal:ILogin){
-    return this.httpClient.post<IUser>("https://localhost:7120/api/Account/Login",JSON.stringify(modal),this.httpOptions)
+    return this.httpClient.post<IUser>(`${this.baseUrl}/api/Account/Login`,JSON.stringify(modal),this.httpOptions)
       .pipe(
         map((user:IUser)=>{
           if(user){
@@ -79,7 +81,7 @@ export class UserServicesService {
     } 
     let headers = new HttpHeaders();
     headers=headers.set('Authorization','Bearer ' + jwt);
-    return this.httpClient.get<IUser>("https://localhost:7120/api/Account/Refresh-User-Token",{headers})
+    return this.httpClient.get<IUser>(`${this.baseUrl}/api/Account/Refresh-User-Token`,{headers})
     .pipe(
       map((user:IUser)=>{
         if(user){

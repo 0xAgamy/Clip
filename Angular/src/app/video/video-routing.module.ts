@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserServicesService } from '../user/UserServices/user-services.service';
+import { UserServices } from '../user/UserServices/user-services.service';
 import { EditComponent } from './edit/edit.component';
 import { ManageComponent } from './manage/manage.component';
 import { UploadComponent } from './upload/upload.component';

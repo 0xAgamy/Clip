@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserServicesService } from '../../user/UserServices/user-services.service';
+import { UserServices } from '../../user/UserServices/user-services.service';
 import { IVideo } from '../model/ivideo';
 import { VideoService } from '../services/video.service';
 
@@ -16,7 +16,7 @@ export class ManageComponent implements OnInit,OnDestroy {
 userId:string=''
 private subescripe!:Subscription
 UserVideos:IVideo[]=[]
-  constructor(private router:Router , private activeRouter:ActivatedRoute ,private videoServices:VideoService,private UserServices:UserServicesService) {
+  constructor(private router:Router , private activeRouter:ActivatedRoute ,private videoServices:VideoService,private UserServices:UserServices) {
 
   }
 ngOnInit() {

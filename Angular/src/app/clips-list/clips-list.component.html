@@ -1,7 +1,7 @@
 <!-- Clips List -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-  @for (video of Videos; track video) {
+  @for (video of Videos; track video.id) {
     <a [routerLink]="['clip',video.id]"
       class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
       <!-- Image -->
@@ -26,7 +26,7 @@
         </h2>
         <!-- Name & Date -->
         <p class="mb-0">
-          {{  video.user.userName  }}&#183;
+          {{  video.userName  }}&#183;
           <span class="text-gray-400">{{video.created |date:'longDate'}}</span>
         </p>
       </div>
