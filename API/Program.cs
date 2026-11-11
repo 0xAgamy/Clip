@@ -93,7 +93,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.UseCors(a => a.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+// app.UseCors(a => a.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
+    p.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod()));
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

@@ -18,9 +18,9 @@ namespace Clips_api.Services
 
         // Edit
 
-        public Task<Video?> EditAsync(int id, EditVideoDto model);
+        public Task<Video?> EditAsync(int id, string userId, EditVideoDto model);
 
         // Delete
-        public Task<Video?> DeleteAsync(int id);
+        public Task<Video?> DeleteAsync(int id, string userId);
     }
 }

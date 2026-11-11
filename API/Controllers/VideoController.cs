@@ -66,8 +66,23 @@ namespace Clips_api.Controllers
         public async Task<IActionResult> GetUserVideos(string userId)
         {
             var UserVideos = await _videoServices.GetUserVideosAsync(userId);
+            var allVideoList = new List<VideoDto>();
+
+            foreach (var vd in UserVideos)
+            {
+                allVideoList.Add(new VideoDto
+                {
+                    Id = vd.Id,
+                    Title = vd.Title,
+                    videoUrl = vd.videoUrl,
+                    thumbnailUrl = vd.thumbnailUrl,
+                    UserName = vd.user?.UserName,
+                    created = vd.created
+                });
+            }
+            
             if (!ModelState.IsValid) return BadRequest("something bad Happen");
-            return Ok(UserVideos);
+            return Ok(allVideoList);
         }
         
         [HttpPost]
@@ -95,7 +110,8 @@ namespace Clips_api.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteClip(int id)
         {
-            var clip = await _videoServices.DeleteAsync(id);
+            var userId= User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var clip = await _videoServices.DeleteAsync(id,userId!);
             if (clip == null) return NotFound("The clip not found");           
             return Ok(clip);
         }
@@ -106,7 +122,9 @@ namespace Clips_api.Controllers
 
         public async Task<IActionResult> EditClip(int id ,EditVideoDto model)
         {
-            var video = await _videoServices.EditAsync(id, model);
+            var userId= User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var video = await _videoServices.EditAsync(id, userId,model);
             if (video == null) return NotFound("The Edited Video Not Found");
             if (!ModelState.IsValid) return BadRequest("Something bad Happen");        
             return Ok(video);
