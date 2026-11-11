@@ -1,27 +1,31 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserServices } from '../user/UserServices/user-services.service';
 import { EditComponent } from './edit/edit.component';
 import { ManageComponent } from './manage/manage.component';
 import { UploadComponent } from './upload/upload.component';
+import {authGuard} from "../guards/auth-guard"
 
 const routes: Routes = [
   {path:'manage',component:ManageComponent,
     data:{
       authOnly:true,
-    },
+    },canActivate:[authGuard]
+    
   },
   {path:'upload',component:UploadComponent,
     data:{
       authOnly:true,
     }
+    ,canActivate:[authGuard]
   },
 
 
-  {path:'Edit/:id',component:EditComponent,
+  {path:'edit/:id',component:EditComponent,
     data:{
       authOnly:true,
+      
     }
+    ,canActivate:[authGuard]
   }  
 
   
