@@ -1,4 +1,5 @@
-﻿using Clips_api.Data;
+﻿using Amazon.S3.Model;
+using Clips_api.Data;
 using Clips_api.DTOs.Video;
 using Clips_api.Models;
 using Microsoft.AspNetCore.Identity;
@@ -20,41 +21,58 @@ namespace Clips_api.Services
             _storage=storage;
         }
 
+        private async Task<VideoDto> ToDtoAsync(Video v)
+        {
+            var videoUrl= await _storage.GetPresignedUrlAsync(v.videoUrl);
+            var thumbnailUrl= await _storage.GetPresignedUrlAsync(v.thumbnailUrl);   
+            return new VideoDto
+            {
+                Id= v.Id, Title= v.Title,
+                videoUrl= videoUrl, thumbnailUrl= thumbnailUrl,
+                UserName= v.user.UserName, created= v.created
+            };
+
+        }
+        private async Task<IEnumerable<VideoDto>>ToDtosAsync(IEnumerable<Video> list)
+        {
+            var items= list.ToList();
+            var urls= await Task.WhenAll(items.Select(async v => new {v.Id, Video=v}));
+
+
+            var tasks= items.Select(ToDtoAsync);
+            return await Task.WhenAll(tasks);
+        }
+
+
         // All Get Methods
-        public async Task<IEnumerable<Video?>> GetAllAsync()
+        public async Task<IEnumerable<VideoDto>> GetAllAsync()
         {
             var videos = await _context.Videos.Include(a=>a.user).ToListAsync();
             if (videos is null) return null;
-            foreach (var vd in videos)
-            {
-                vd.videoUrl = await _storage.GetPresignedUrlAsync(vd.videoUrl);
-                vd.thumbnailUrl= await _storage.GetPresignedUrlAsync(vd.thumbnailUrl);
+            return await ToDtosAsync(videos);
 
-            }
-            return videos;
         }
 
-        public async Task<Video?> GetVideoAsync(int id)
+        public async Task<VideoDto?> GetVideoAsync(int id)
         {
             var video = await _context.Set<Video>().Include(a => a.user).FirstOrDefaultAsync(x => x.Id == id);
             if (video == null) return null;
-            video.videoUrl= await _storage.GetPresignedUrlAsync(video.videoUrl);
-            video.thumbnailUrl= await _storage.GetPresignedUrlAsync(video.thumbnailUrl);
+            return await ToDtoAsync(video);
 
-            return video;
     
         }
 
 
-        public async Task<IEnumerable<Video>> GetUserVideosAsync(string userId)
+        public async Task<IEnumerable<VideoDto>> GetUserVideosAsync(string userId)
         {
-            return await _context.Videos.Include(u=>u.user).Where(u => u.UserId == userId).ToListAsync();
+            var userVideos= await _context.Videos.Include(u=>u.user).Where(u => u.UserId == userId).ToListAsync();
+            return await ToDtosAsync(userVideos);
         }
 
 
         //  Post Methods
 
-        public async Task<Video> Upload(UploadVideoDto model, string userEmail)
+        public async Task<VideoDto> UploadAsync(UploadVideoDto model, string userEmail)
         {
             var user = await _userManager.FindByEmailAsync(userEmail);
 
@@ -81,11 +99,11 @@ namespace Clips_api.Services
             await _context.Videos.AddAsync(video);
             await _context.SaveChangesAsync();
 
-            return video;
+            return await ToDtoAsync(video);
         }
 
         // Delete
-        public async Task<Video?> DeleteAsync(int id, string userId)
+        public async Task<VideoDto?> DeleteAsync(int id, string userId)
         {
             var video = await _context.Videos.FindAsync(id);
             if (video is null || video.UserId != userId) return null;
@@ -99,11 +117,12 @@ namespace Clips_api.Services
 
             _context.Videos.Remove(video);
             await _context.SaveChangesAsync();
-            return video;
+            return await ToDtoAsync(video);
+
         }
 
         // Edit 
-        public async Task<Video?> EditAsync(int id, string userId ,EditVideoDto model)
+        public async Task<VideoDto?> EditAsync(int id, string userId ,EditVideoDto model)
         {
             var video = await _context.Videos.FindAsync(id);
             if (video is null || video.UserId != userId) return null;
@@ -111,8 +130,9 @@ namespace Clips_api.Services
             
 
             video.Title = model.Title;
+
             await _context.SaveChangesAsync();
-            return video;
+            return await ToDtoAsync(video);
         }
     }
 }
