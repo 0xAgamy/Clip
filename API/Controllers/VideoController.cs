@@ -54,18 +54,8 @@ namespace Clips_api.Controllers
         {
             
             var userEmail= User.FindFirstValue(ClaimTypes.Email);
-            try{
-                
-            await _videoServices.UploadAsync(model,userEmail);
-            return Ok();
-
-            }
-            catch(Exception ex)
-            {
-                return BadRequest();
-            }
-
-            
+            var video= await _videoServices.UploadAsync(model,userEmail);
+            return Ok(video);
             
         }
 

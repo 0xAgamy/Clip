@@ -13,12 +13,15 @@ namespace Clips_api.Services
 
         private readonly UserManager<User> _userManager;
         private readonly IFileStorageService _storage;
+        private readonly ILogger<VideoServices> _logger;
 
-        public VideoServices(ApplicationDbContext context, UserManager<User> userManager, IFileStorageService storage)
+        public VideoServices(ApplicationDbContext context, UserManager<User> userManager,
+                            IFileStorageService storage, ILogger<VideoServices>Logger)
         {
             _context = context;
             _userManager = userManager;
             _storage=storage;
+            _logger=Logger;
         }
 
         private async Task<VideoDto> ToDtoAsync(Video v)
@@ -74,49 +77,62 @@ namespace Clips_api.Services
 
         public async Task<VideoDto> UploadAsync(UploadVideoDto model, string userEmail)
         {
-            var user = await _userManager.FindByEmailAsync(userEmail);
-
-            using var videoStream= model.VideoFile.OpenReadStream();
-            using var thumbStream= model.thumbnail.OpenReadStream();
+            var user = await _userManager.FindByEmailAsync(userEmail)
+                        ?? throw new InvalidOperationException("No User for Email Claim");
             
-            var videoKey= await _storage.UploadAsync(videoStream, model.VideoFile.FileName,
-                                                    model.VideoFile.ContentType,"videos");
-
-            var thumbnailKey = await _storage.UploadAsync(thumbStream, model.thumbnail.FileName,
-                                                         model.thumbnail.ContentType, "thumbnails");
-            
-            var video = new Video
+            string? videoKey = null, thumbKey = null;
+            try
             {
-                Title        = model.title,
+                await  using var videoStream= model.VideoFile.OpenReadStream();
+                videoKey= await _storage.UploadAsync(videoStream, model.VideoFile.FileName,
+                                                    model.VideoFile.ContentType,"videos");
+                
+                await using var ts= model.Thumbnail.OpenReadStream();
+                 var thumbnailKey = await _storage.UploadAsync(ts, model.Thumbnail.FileName,
+                                                         model.Thumbnail.ContentType, "thumbnails");
+
+
+                var video = new Video
+                {
+                Title        = model.Title,
                 UserId       = user!.Id,
                 videoUrl     = videoKey,      
-                thumbnail    = model.thumbnail.FileName,  
+                thumbnail    = model.Thumbnail.FileName,  
                 thumbnailUrl = thumbnailKey,  
                 created      = DateTime.UtcNow
-            };
+                };
+                _context.Videos.Add(video);
+                await _context.SaveChangesAsync();
+                return await ToDtoAsync(video);
 
-
-            await _context.Videos.AddAsync(video);
-            await _context.SaveChangesAsync();
-
-            return await ToDtoAsync(video);
+            }
+            catch
+            {
+                if (videoKey != null) await _storage.DeleteAsync(videoKey);
+                if (thumbKey != null) await _storage.DeleteAsync(thumbKey);
+                throw;
+            }
         }
 
         // Delete
         public async Task<VideoDto?> DeleteAsync(int id, string userId)
         {
+
             var video = await _context.Videos.FindAsync(id);
             if (video is null || video.UserId != userId) return null;
-            
-
-
-            await _storage.DeleteAsync(video.videoUrl);
-            await _storage.DeleteAsync(video.thumbnailUrl);
-            
-
 
             _context.Videos.Remove(video);
             await _context.SaveChangesAsync();
+
+            try { 
+                await _storage.DeleteAsync(video.videoUrl);
+                await _storage.DeleteAsync(video.thumbnailUrl);
+            }
+            catch (Exception ex) 
+            {
+                 _logger.LogError(ex, "Orphaned S3 objects: {VideoKey}, {ThumbKey}",
+                                video.videoUrl, video.thumbnailUrl);
+            }
             return await ToDtoAsync(video);
 
         }
