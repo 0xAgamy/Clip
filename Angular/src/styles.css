@@ -4,10 +4,92 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    background-color: #161d31;
+@layer base {
+  html {
+    scroll-behavior: smooth;
   }
-  
+
+  body {
+    background-color: #161d31;
+    color: #e5e7eb;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: rgba(129, 140, 248, 0.35);
+  }
+}
+
+@layer components {
+  /* Page shell: consistent horizontal rhythm for every screen. */
+  .page-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .surface-card {
+    @apply rounded-2xl bg-[#283046] shadow-lg shadow-black/20 ring-1 ring-white/5;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold tracking-tight text-white sm:text-3xl;
+  }
+
+  .muted {
+    @apply text-gray-400;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold
+      transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+      focus-visible:ring-offset-2 focus-visible:ring-offset-[#161d31]
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 hover:bg-indigo-400;
+  }
+
+  .btn-ghost {
+    @apply bg-white/5 text-gray-200 ring-1 ring-white/10 hover:bg-white/10 hover:text-white;
+  }
+
+  .btn-danger {
+    @apply bg-red-500/90 text-white hover:bg-red-500;
+  }
+
+  /* Forms */
+  .form-label {
+    @apply mb-1.5 block text-sm font-medium text-gray-300;
+  }
+
+  .input-field {
+    @apply block w-full rounded-xl border border-white/10 bg-[#1b2437] px-3.5 py-2.5 text-sm
+      text-gray-100 placeholder-gray-500 transition duration-200
+      focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/30;
+  }
+
+  .form-error {
+    @apply mt-1.5 text-sm text-red-400;
+  }
+
+  /* Navigation */
+  .nav-link {
+    @apply rounded-lg px-3 py-2 text-sm font-medium text-gray-300 transition-colors duration-200
+      hover:bg-white/5 hover:text-white;
+  }
+
+  .nav-link-active {
+    @apply bg-indigo-500/20 text-indigo-300;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-indigo-500/20 px-3 py-1 text-xs
+      font-semibold uppercase tracking-wider text-indigo-300;
+  }
+}
+
   .material-icons.text-base {
     font-size: inherit;
   }

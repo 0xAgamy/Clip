@@ -1,49 +1,51 @@
 <!-- Main Content -->
-<section class="container  my-8 bg-secondary p-6">
-  <div class="rounded relative flex flex-col">
-    <!-- Title and Uploader -->
-    @if (video) {
-      <h1 class="font-bold mb-2 text-3xl">{{video.title}}</h1>
-      <div class="text-gray-400 mb-6">
-        Uploaded By {{video.userName}}
-        <span>{{video.created |date:'longDate'}}</span>
-      </div>
-    }
+<section class="page-container py-8">
 
-    <!-- Video Editor -->
-    <div class="grid grid-cols-3 gap-2">
+  @if (video) {
+    <div class="grid gap-8 lg:grid-cols-3">
+
       <!-- Video Player -->
+      <div class="lg:col-span-2">
+        <div class="surface-card overflow-hidden">
+          <video class="aspect-video w-full bg-black" [src]="video.videoUrl" type="video/mp4" controls></video>
+        </div>
 
-      @if (video) {
-        <video class="col-span-2" [src]="video.videoUrl" type="video/mp4" width="2000" height="250" controls> </video>
-      }
-      <div>
-        @for (clip of topVideo; track clip.id) {
-          <a [routerLink]="['/clip',clip.id]"
-            class="grid grid-cols-4  mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-            <!-- Image -->
-            <img class="card-img-top rounded-tl-2xl w-full col-span-2" src="{{clip.thumbnailUrl}}" [alt]="clip.title" >
-          
-          <!-- Body -->
-          <div class="p-1 col-span-2 text-center  " >
-            <!-- Heading -->
-            <h2 class="text-lg p-3  mb-2">
-              {{clip.title}}
-            </h2>
-            <!-- Name & Date -->
-            <p class="mb-0">
-              {{clip.userName}} -
-              <span class="text-gray-400">{{clip.created|date:'longDate'}}</span>
-            </p>
+        <!-- Title and Uploader -->
+        <h1 class="mt-6 text-2xl font-bold leading-tight text-white sm:text-3xl">{{video.title}}</h1>
+        <div class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-400">
+          <span class="material-icons text-base">person</span>
+          <span class="text-gray-300">Uploaded by {{video.userName}}</span>
+          <span class="text-gray-600">&middot;</span>
+          <span>{{video.created | date:'longDate'}}</span>
+        </div>
+      </div>
+
+      <!-- Related Clips -->
+      <aside>
+        <h2 class="mb-4 text-lg font-semibold text-white">More clips</h2>
+
+        @if (topVideo.length) {
+          <div class="space-y-3">
+            @for (clip of topVideo; track clip.id) {
+              <a [routerLink]="['/clip',clip.id]"
+                class="group flex gap-3 rounded-xl bg-[#283046] p-2 ring-1 ring-white/5 transition duration-200 hover:bg-white/5 hover:ring-indigo-400/30">
+                <img class="h-16 w-28 flex-none rounded-lg object-cover" [src]="clip.thumbnailUrl" [alt]="clip.title">
+
+                <div class="min-w-0 py-1">
+                  <h3 class="line-clamp-2 text-sm font-semibold text-white transition-colors duration-200 group-hover:text-indigo-300">
+                    {{clip.title}}
+                  </h3>
+                  <p class="mt-1 truncate text-xs text-gray-400">{{clip.userName}}</p>
+                </div>
+              </a>
+            }
           </div>
-        </a>
-      }
+        } @else {
+          <p class="muted text-sm">No related clips yet.</p>
+        }
+      </aside>
 
     </div>
+  }
 
-
-
-  </div>
-
-</div>
 </section>
