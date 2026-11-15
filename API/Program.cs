@@ -31,11 +31,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IvideoServices, VideoServices>();
 
 //JWT
-
+builder.Services.AddScoped<JWTservice>();
 builder.Services.AddOptions<JwtOptions>()
-    .BindConfiguration(JwtOptions.SectionName)
-    .ValidateDataAnnotations()
-    .ValidateOnStart();
+	.BindConfiguration(JwtOptions.SectionName)
+	.ValidateDataAnnotations()
+	.ValidateOnStart();
 // S3
 
 builder.Services.AddOptions<S3Options>()
