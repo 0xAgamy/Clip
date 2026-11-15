@@ -27,22 +27,30 @@
   @if (UserVideos.length) {
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       @for (video of UserVideos; track video) {
-        <div class="surface-card flex flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40">
+        <div class="group relative flex flex-col overflow-hidden rounded-2xl bg-[#1e2638] ring-1 ring-white/5 transition duration-300 hover:-translate-y-1.5 hover:ring-indigo-400/40 hover:shadow-2xl hover:shadow-indigo-500/10">
 
           <!-- Thumbnail -->
-          <a [routerLink]="['/clip',video.id]" class="group relative block aspect-video overflow-hidden bg-[#1b2437]">
-            <img class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          <a [routerLink]="['/clip',video.id]" class="relative block aspect-video overflow-hidden bg-[#131a29]">
+            <img class="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-110"
               [src]="video.thumbnailUrl" [alt]="video.title">
-            <span class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 transition duration-300 group-hover:opacity-100"></span>
+            <span class="absolute inset-0 bg-gradient-to-t from-[#0b1020] via-[#0b1020]/20 to-transparent"></span>
+            <span class="absolute inset-0 flex items-center justify-center">
+              <span class="flex h-12 w-12 scale-75 items-center justify-center rounded-full bg-white/10 text-white opacity-0 ring-1 ring-white/30 backdrop-blur-md transition-all duration-300 group-hover:scale-100 group-hover:bg-indigo-500 group-hover:opacity-100">
+                <span class="material-icons">play_arrow</span>
+              </span>
+            </span>
           </a>
 
           <!-- Body -->
           <div class="p-5">
-            <h2 class="line-clamp-2 text-lg font-semibold text-white">{{video.title}}</h2>
+            <h2 class="line-clamp-2 text-base font-semibold leading-snug text-white transition-colors duration-200 group-hover:text-indigo-300">
+              {{video.title}}
+            </h2>
+            <p class="mt-2 text-xs text-gray-500">{{video.created | date:'mediumDate'}}</p>
           </div>
 
           <!-- Actions -->
-          <div class="mt-auto flex divide-x divide-white/5 border-t border-white/5 bg-black/20">
+          <div class="mt-auto flex divide-x divide-white/5 border-t border-white/5 bg-black/25">
             <a [routerLink]="['/edit',video.id]"
               class="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-300 transition hover:bg-white/5 hover:text-indigo-300">
               <span class="material-icons text-base">build</span>
