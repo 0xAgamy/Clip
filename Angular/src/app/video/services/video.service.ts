@@ -43,9 +43,8 @@ export class VideoService {
     return this.httpclient.get<IVideo>(`${this.baseUrl}/api/Video/${id}`)
   }
 
-  getUserClips(userId:string):Observable<IVideo[]>{
-    const params =new HttpParams().set('userId',userId)
-    return this.httpclient.get<IVideo[]>(`${this.baseUrl}api/Video/user/${userId}`)
+  getUserClips():Observable<IVideo[]>{
+    return this.httpclient.get<IVideo[]>(`${this.baseUrl}/api/Video/user/`)
   }
 
   DeleteClip(id:number){

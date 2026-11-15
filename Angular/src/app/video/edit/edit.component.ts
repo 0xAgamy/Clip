@@ -1,9 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IVideo } from '../model/ivideo';
 import { VideoService } from '../services/video.service';
-import { NgxCaptureService } from 'ngx-capture';
 import { IVideoVm } from '../model/ivideo-vm';
 
 
@@ -37,24 +36,19 @@ inSubmission=false;
     ngOnInit() {
         this.activeRouter.paramMap.subscribe((paramsmap)=>{
             this.id=String(paramsmap.get('id'))
-            console.log(this.id)
-          })
-          this.VideoServices.getClip(this.id).subscribe(v=>{
+            this.VideoServices.getClip(this.id).subscribe(v=>{
             this.Video=v
+            })
           })
-            console.log(this.TitleName)
-
+    
             
         }
 
   
-      get TitleName(){
-      return this.Video.title
-      }
-      // get VideoTitle(){
-        
-      // return this.Video.title;
-      // }
+    get TitleName(){
+    return this.Video.title
+    }
+
 
 
   Edit(){
