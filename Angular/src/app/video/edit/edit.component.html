@@ -31,7 +31,7 @@
 
           @if (showAlert) {
             <div class="mt-4">
-              <app-alert>
+              <app-alert [alertColor]="alertColor">
                 {{alertMesg}}
               </app-alert>
             </div>
@@ -39,12 +39,16 @@
 
           <div class="mt-8 flex justify-end">
             <button
-              [disabled]="$safeNavigationMigration(videoForm.controls.title.errors?.['required'])"
-              [ngClass]="{ 'opacity-50': inSubmission || videoForm.controls.title.errors?.['required'] }"
+              [disabled]="videoForm.invalid || inSubmission"
               type="submit"
               class="btn btn-primary">
-              <span class="material-icons text-base">save</span>
-              Edit
+              @if (inSubmission) {
+                <span class="material-icons animate-spin text-base">progress_activity</span>
+                Saving...
+              } @else {
+                <span class="material-icons text-base">save</span>
+                Save changes
+              }
             </button>
           </div>
         </form>

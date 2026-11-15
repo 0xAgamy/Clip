@@ -1,5 +1,16 @@
 <section class="page-container py-8">
 
+  <!-- Deleted feedback -->
+  @if (successMessage) {
+    <div class="mb-6 flex items-center gap-3 rounded-xl bg-green-600/90 px-4 py-3 text-sm text-white shadow-lg ring-1 ring-inset ring-white/10">
+      <span class="material-icons text-base">check_circle</span>
+      <span class="flex-1">{{ successMessage }}</span>
+      <button type="button" (click)="successMessage=''"
+        class="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 transition hover:bg-white/10 hover:text-white"
+        aria-label="Dismiss">&#x2715;</button>
+    </div>
+  }
+
   <!-- Top Bar -->
   <div class="surface-card mb-8 flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
     <div>
@@ -37,7 +48,7 @@
               <span class="material-icons text-base">build</span>
               Edit
             </a>
-            <button type="button" (click)="DeleteVideo(video.id)"
+            <button type="button" (click)="RequestDelete(video)"
               class="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-gray-300 transition hover:bg-red-500/10 hover:text-red-400">
               <span class="material-icons text-base">delete</span>
               Delete
@@ -57,3 +68,35 @@
   }
 
 </section>
+
+<!-- Delete confirmation -->
+<app-modal MOdalId="delete-video">
+  <h3 heading class="text-lg font-semibold text-white">Delete video?</h3>
+
+  <p class="text-sm leading-relaxed text-gray-300">
+    <span class="font-semibold text-white">{{ videoToDelete?.title }}</span>
+    will be permanently removed. This action can't be undone.
+  </p>
+
+  @if (deleteError) {
+    <div class="mt-4 flex items-start gap-3 rounded-xl bg-red-600/90 px-4 py-3 text-sm text-white shadow-lg">
+      <span class="material-icons text-base">error_outline</span>
+      <span>{{ deleteError }}</span>
+    </div>
+  }
+
+  <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+    <button type="button" class="btn btn-ghost" (click)="CancelDelete()" [disabled]="isDeleting">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-danger" (click)="ConfirmDelete()" [disabled]="isDeleting">
+      @if (isDeleting) {
+        <span class="material-icons animate-spin text-base">progress_activity</span>
+        Deleting...
+      } @else {
+        <span class="material-icons text-base">delete</span>
+        Delete video
+      }
+    </button>
+  </div>
+</app-modal>

@@ -47,7 +47,7 @@ export class VideoService {
   RecommencClips(id:number):Observable<IVideo[]>{
     return this.httpclient.get<IVideo[]>(`${this.baseUrl}/api/Video/recommend/${id}`)
   }
-  EditClip(id:number,model:IVideoVm){
-    return this.httpclient.put(`${this.baseUrl}/api/Video/${id}`,model)
+  EditClip(id:number,model:IVideoVm):Observable<IVideo>{
+    return this.httpclient.put<IVideo>(`${this.baseUrl}/api/Video/${id}`,model)
   }
 }

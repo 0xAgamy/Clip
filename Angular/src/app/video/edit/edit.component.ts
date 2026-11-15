@@ -19,8 +19,8 @@ id:string=''
 //
 
 showAlert=false;
-alertColor='info';
-alertMesg='Please Wait ! Your Clip is being uploaded.'
+alertColor:'info'|'success'|'error'='info';
+alertMesg=''
 inSubmission=false;
 
   title = new FormControl('',[Validators.required,Validators.minLength(3)])
@@ -38,25 +38,46 @@ inSubmission=false;
             this.id=String(paramsmap.get('id'))
             this.VideoServices.getClip(this.id).subscribe(v=>{
             this.Video=v
+            this.videoForm.patchValue({title:v.title})
             })
           })
-    
-            
+
         }
 
-  
+
     get TitleName(){
-    return this.Video.title
+    return this.Video?.title ?? ''
     }
 
-
-
   Edit(){
+      if(this.videoForm.invalid || this.inSubmission){return}
+
       const editedVideo={
         title:this.videoForm.get('title')?.value
       }as IVideoVm
-      let ID = + this.id 
-      console.log("edit")
-      this.VideoServices.EditClip(ID,editedVideo).subscribe();
+      let ID = + this.id
+
+      this.inSubmission=true
+      this.showAlert=true
+      this.alertColor='info'
+      this.alertMesg='Saving your changes...'
+
+      this.VideoServices.EditClip(ID,editedVideo).subscribe({
+        next:(edited)=>{
+          this.inSubmission=false
+          if(edited){
+            this.Video=edited
+            this.videoForm.patchValue({title:edited.title})
+            this.videoForm.markAsPristine()
+          }
+          this.alertColor='success'
+          this.alertMesg='Your clip was updated successfully.'
+        },
+        error:()=>{
+          this.inSubmission=false
+          this.alertColor='error'
+          this.alertMesg='Could not update this clip. Please try again.'
+        }
+      })
   }
 }
