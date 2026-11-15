@@ -6,12 +6,17 @@ namespace Clips_api.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Title { get;set; }
-        public string videoUrl { get; set; }
-        public string thumbnail { get; set; }
-        public string thumbnailUrl { get; set; }
-        public string UserId { get; set; }
-        public User? user { get; set; }
-        public DateTime? created { get; set; }=DateTime.UtcNow;
+        [Required]
+        [MaxLength(200)]
+        public string Title { get;set; } = string.Empty;
+        [Required, MaxLength(512)]
+        public string VideoUrl { get; set; } = string.Empty;
+
+        [Required, MaxLength(512)]
+        public string ThumbnailUrl { get; set; } = string.Empty;
+        [Required, MaxLength(64)]
+        public string UserId { get; set; } = string.Empty;
+        public User? User { get; set; }
+        public DateTime? Created { get; set; }=DateTime.UtcNow;
     }   
 }

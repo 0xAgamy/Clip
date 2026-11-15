@@ -26,13 +26,13 @@ namespace Clips_api.Services
 
         private async Task<VideoDto> ToDtoAsync(Video v)
         {
-            var videoUrl= await _storage.GetPresignedUrlAsync(v.videoUrl);
-            var thumbnailUrl= await _storage.GetPresignedUrlAsync(v.thumbnailUrl);   
+            var videoUrl= await _storage.GetPresignedUrlAsync(v.VideoUrl);
+            var thumbnailUrl= await _storage.GetPresignedUrlAsync(v.ThumbnailUrl);   
             return new VideoDto
             {
                 Id= v.Id, Title= v.Title,
                 videoUrl= videoUrl, thumbnailUrl= thumbnailUrl,
-                UserName= v.user.UserName, created= v.created
+                UserName= v.User.UserName, created= v.Created
             };
 
         }
@@ -50,7 +50,7 @@ namespace Clips_api.Services
         // All Get Methods
         public async Task<IEnumerable<VideoDto>> GetAllAsync()
         {
-            var videos = await _context.Videos.Include(a=>a.user).ToListAsync();
+            var videos = await _context.Set<Video>().Include(a=>a.User).ToListAsync();
             if (videos is null) return null;
             return await ToDtosAsync(videos);
 
@@ -58,7 +58,7 @@ namespace Clips_api.Services
 
         public async Task<VideoDto?> GetVideoAsync(int id)
         {
-            var video = await _context.Set<Video>().Include(a => a.user).FirstOrDefaultAsync(x => x.Id == id);
+            var video = await _context.Set<Video>().Include(a => a.User).FirstOrDefaultAsync(x => x.Id == id);
             if (video == null) return null;
             return await ToDtoAsync(video);
 
@@ -68,7 +68,7 @@ namespace Clips_api.Services
 
         public async Task<IEnumerable<VideoDto>> GetUserVideosAsync(string userId)
         {
-            var userVideos= await _context.Videos.Include(u=>u.user).Where(u => u.UserId == userId).ToListAsync();
+            var userVideos= await _context.Set<Video>().Include(u=>u.User).Where(u => u.UserId == userId).ToListAsync();
             return await ToDtosAsync(userVideos);
         }
 
@@ -96,12 +96,11 @@ namespace Clips_api.Services
                 {
                 Title        = model.Title,
                 UserId       = user!.Id,
-                videoUrl     = videoKey,      
-                thumbnail    = model.Thumbnail.FileName,  
-                thumbnailUrl = thumbnailKey,  
-                created      = DateTime.UtcNow
+                VideoUrl     = videoKey,      
+                ThumbnailUrl = thumbnailKey,  
+                Created      = DateTime.UtcNow
                 };
-                _context.Videos.Add(video);
+                _context.Set<Video>().Add(video);
                 await _context.SaveChangesAsync();
                 return await ToDtoAsync(video);
 
@@ -118,20 +117,20 @@ namespace Clips_api.Services
         public async Task<VideoDto?> DeleteAsync(int id, string userId)
         {
 
-            var video = await _context.Videos.FindAsync(id);
+            var video = await _context.Set<Video>().FindAsync(id);
             if (video is null || video.UserId != userId) return null;
 
-            _context.Videos.Remove(video);
+            _context.Set<Video>().Remove(video);
             await _context.SaveChangesAsync();
 
             try { 
-                await _storage.DeleteAsync(video.videoUrl);
-                await _storage.DeleteAsync(video.thumbnailUrl);
+                await _storage.DeleteAsync(video.VideoUrl);
+                await _storage.DeleteAsync(video.ThumbnailUrl);
             }
             catch (Exception ex) 
             {
                  _logger.LogError(ex, "Orphaned S3 objects: {VideoKey}, {ThumbKey}",
-                                video.videoUrl, video.thumbnailUrl);
+                                video.VideoUrl, video.ThumbnailUrl);
             }
             return await ToDtoAsync(video);
 
@@ -140,7 +139,7 @@ namespace Clips_api.Services
         // Edit 
         public async Task<VideoDto?> EditAsync(int id, string userId ,EditVideoDto model)
         {
-            var video = await _context.Videos.FindAsync(id);
+            var video = await _context.Set<Video>().FindAsync(id);
             if (video is null || video.UserId != userId) return null;
 
             
