@@ -1,10 +1,12 @@
 using Amazon.S3;
 using Clips_api.Data;
 using Clips_api.Models;
+using Clips_api.Options;
 using Clips_api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -26,30 +28,33 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddScoped<JWTservice>();
 builder.Services.AddScoped<IvideoServices, VideoServices>();
 
+//JWT
 
+builder.Services.AddOptions<JwtOptions>()
+    .BindConfiguration(JwtOptions.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+// S3
 
+builder.Services.AddOptions<S3Options>()
+        .BindConfiguration(S3Options.SectionName)
+        .ValidateDataAnnotations()
+        .ValidateOnStart();
 
-// Add AWS S3 service and file storage service
-var s3Config= new AmazonS3Config
+builder.Services.AddSingleton<IAmazonS3>(sp =>
 {
-    ServiceURL= builder.Configuration["S3:ServiceUrl"],
-    ForcePathStyle = builder.Configuration.GetValue<bool>("S3:ForcePathStyle", true),
-    AuthenticationRegion = builder.Configuration["S3:Region"] ?? "us-east-1",
-    
-    UseHttp=builder.Configuration.GetValue<bool>("S3:UseHttp", false)
-    
-};
-builder.Services.AddSingleton<IAmazonS3>(sp => new AmazonS3Client(
-    builder.Configuration["S3:AccessKey"],
-    builder.Configuration["S3:SecretKey"],
-    
-    
-    s3Config));
+    var s3 = sp.GetRequiredService<IOptions<S3Options>>().Value;
+    return new AmazonS3Client(s3.AccessKey, s3.SecretKey, new AmazonS3Config
+    {
+        ServiceURL = s3.ServiceUrl,
+        ForcePathStyle = s3.ForcePathStyle,
+        AuthenticationRegion = s3.Region ?? "us-east-1",
+        UseHttp = s3.UseHttp
+    });
+});
 builder.Services.AddScoped<IFileStorageService, S3StorageService>();
-
 
 builder.Services.AddIdentityCore<User>(o =>
 {
@@ -71,13 +76,19 @@ builder.Services.AddIdentityCore<User>(o =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
+        var jwt = builder.Configuration
+            .GetSection(JwtOptions.SectionName).Get<JwtOptions>()!;
+
         o.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
-            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwt.Key)),
+            ValidIssuer   = jwt.Issuer,
+            ValidAudience = jwt.Audience,
             ValidateIssuer = true,
-            ValidateAudience = false,
+            ValidateAudience = true,
+            ClockSkew = TimeSpan.FromMinutes(1),
         };
     });
 
