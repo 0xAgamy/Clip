@@ -117,7 +117,9 @@ namespace Clips_api.Services
         public async Task<VideoDto?> DeleteAsync(int id, string userId)
         {
 
-            var video = await _context.Set<Video>().FindAsync(id);
+            var video = await _context.Set<Video>()
+                                     .Include(v => v.User)
+                                     .FirstOrDefaultAsync(v => v.Id == id);
             if (video is null || video.UserId != userId) return null;
 
             _context.Set<Video>().Remove(video);
@@ -139,7 +141,9 @@ namespace Clips_api.Services
         // Edit 
         public async Task<VideoDto?> EditAsync(int id, string userId ,EditVideoDto model)
         {
-            var video = await _context.Set<Video>().FindAsync(id);
+            var video = await _context.Set<Video>()
+                                     .Include(v => v.User)
+                                     .FirstOrDefaultAsync(v => v.Id == id);
             if (video is null || video.UserId != userId) return null;
 
             
