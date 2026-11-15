@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserServicesService } from '../../user/UserServices/user-services.service';
+import {ModalService} from "../../services/modal.service"
 import { IVideo } from '../model/ivideo';
 import { VideoService } from '../services/video.service';
 
@@ -16,43 +16,66 @@ export class ManageComponent implements OnInit,OnDestroy {
 userId:string=''
 private subescripe!:Subscription
 UserVideos:IVideo[]=[]
-url
-  constructor(private router:Router , private activeRouter:ActivatedRoute ,private videoServices:VideoService,private UserServices:UserServicesService) {
-    this.url=this.videoServices.baseUrl
+
+// delete flow
+videoToDelete:IVideo|null=null
+isDeleting=false
+deleteError=''
+successMessage=''
+
+  constructor(private videoServices:VideoService, private _modalService:ModalService ) {
+
   }
 ngOnInit() {
-    // this.activeRouter.queryParamMap.subscribe(  (params:Params)=>{
-    //   this.videoOrder=params['sort']=='2'? params['sort']:'1'
-
-    // }  )
-    this.UserServices.user$.subscribe(u=>{
-      this.userId=u!.id
-      console.log(this.userId )
-    })
-
-   this.subescripe= this.videoServices.getUserClips(this.userId).subscribe(uv=>{
-      console.log(this.userId )
-      this.UserVideos=uv;
-      console.log(this.UserVideos)
+    this._modalService.register('delete-video');
+    this.loadVideos();
+}
+loadVideos(){
+    this.subescripe= this.videoServices.getUserClips().subscribe({
+      next:(video)=>{
+        this.UserVideos=video;
+      },
+      error:(err)=>{
+        // console.log(err)
+      }
     })
 }
-DeleteVideo(id:number){
-this.videoServices.DeleteClip(id).subscribe()
+RequestDelete(video:IVideo){
+  this.videoToDelete=video;
+  this.deleteError='';
+  this._modalService.toggleModel('delete-video');
+}
+CancelDelete(){
+  this.videoToDelete=null;
+  this.deleteError='';
+  this.isDeleting=false;
+  this._modalService.toggleModel('delete-video');
+}
+ConfirmDelete(){
+  if(!this.videoToDelete || this.isDeleting){return;}
+
+  const id=this.videoToDelete.id;
+  const title=this.videoToDelete.title;
+  this.isDeleting=true;
+  this.deleteError='';
+
+  this.videoServices.DeleteClip(id).subscribe({
+    next:()=>{
+      this.UserVideos=this.UserVideos.filter(video=>video.id !== id);
+      this.isDeleting=false;
+      this.videoToDelete=null;
+      this.successMessage=`"${title}" was deleted.`;
+      this._modalService.toggleModel('delete-video');
+    },
+    error:()=>{
+      this.isDeleting=false;
+      this.deleteError='Could not delete this video. Please try again.';
+    }
+  })
 }
 ngOnDestroy(): void {
     this.subescripe.unsubscribe();
+    this._modalService.unRegister('delete-video');
 }
-  //You must do sorting in tha backend  
-  // short(event:Event){
-  //     let {value}  = (event.target as HTMLSelectElement);
-
-  //     this.router.navigate([],{
-  //       relativeTo:this.activeRouter,
-  //       queryParams:{
-  //         sort:value
-  //       }
-  //     })
-  // }
-
-
 }
+

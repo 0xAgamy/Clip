@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { UserServicesService } from './user/UserServices/user-services.service';
+import { UserServices } from './user/UserServices/user-services.service';
 
 @Component({
     selector: 'app-root',
@@ -10,7 +10,7 @@ import { UserServicesService } from './user/UserServices/user-services.service';
 })
 export class AppComponent implements OnInit  {
 
-  constructor(public UserService:UserServicesService) {
+  constructor(public UserService:UserServices) {
     
   }
 ngOnInit(): void {

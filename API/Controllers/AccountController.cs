@@ -3,11 +3,9 @@ using Clips_api.DTOs.Account;
 using Clips_api.Models;
 using Clips_api.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Eventing.Reader;
 using System.Security.Claims;
 
 namespace Clips_api.Controllers
@@ -59,14 +57,15 @@ namespace Clips_api.Controllers
             };
             var result =await _userManager.CreateAsync(addingUser,modal.Password);
             if (!result.Succeeded) return BadRequest("Something wrong happen");
-            return Ok(result);
+            return Ok();
 
         }
         [Authorize]
         [HttpGet("Refresh-User-Token")]
         public async Task<ActionResult<UserDto>> RefreshUserToken()
         {
-            var user = await _userManager.FindByEmailAsync(User.FindFirst(ClaimTypes.Email)?.Value);
+            var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+             if (user == null) return Unauthorized("User no longer exists");
             return CreateUser(user);
         }
         private  UserDto CreateUser(User user)

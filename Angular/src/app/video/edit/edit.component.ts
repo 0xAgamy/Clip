@@ -1,9 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IVideo } from '../model/ivideo';
 import { VideoService } from '../services/video.service';
-import { NgxCaptureService } from 'ngx-capture';
 import { IVideoVm } from '../model/ivideo-vm';
 
 
@@ -20,12 +19,10 @@ id:string=''
 //
 
 showAlert=false;
-alertColor='blue';
-alertMesg='Please Wait ! Your Clip is being uploaded.'
+alertColor:'info'|'success'|'error'='info';
+alertMesg=''
 inSubmission=false;
 
-
-  url
   title = new FormControl('',[Validators.required,Validators.minLength(3)])
   videoForm=new FormGroup({
     title:this.title
@@ -33,38 +30,54 @@ inSubmission=false;
     constructor(private VideoServices:VideoService,
       private activeRouter:ActivatedRoute,
       ) {
-        this.url= this.VideoServices.baseUrl
+
     }
 
     ngOnInit() {
         this.activeRouter.paramMap.subscribe((paramsmap)=>{
             this.id=String(paramsmap.get('id'))
-            console.log(this.id)
-          })
-          this.VideoServices.getClip(this.id).subscribe(v=>{
+            this.VideoServices.getClip(this.id).subscribe(v=>{
             this.Video=v
+            this.videoForm.patchValue({title:v.title})
+            })
           })
-            console.log(this.TitleName)
 
-            
         }
 
-  
-      get TitleName(){
-      return this.Video.title
-      }
-      // get VideoTitle(){
-        
-      // return this.Video.title;
-      // }
 
+    get TitleName(){
+    return this.Video?.title ?? ''
+    }
 
   Edit(){
+      if(this.videoForm.invalid || this.inSubmission){return}
+
       const editedVideo={
         title:this.videoForm.get('title')?.value
       }as IVideoVm
-      let ID = + this.id 
-      console.log("edit")
-      this.VideoServices.EditClip(ID,editedVideo).subscribe();
+      let ID = + this.id
+
+      this.inSubmission=true
+      this.showAlert=true
+      this.alertColor='info'
+      this.alertMesg='Saving your changes...'
+
+      this.VideoServices.EditClip(ID,editedVideo).subscribe({
+        next:(edited)=>{
+          this.inSubmission=false
+          if(edited){
+            this.Video=edited
+            this.videoForm.patchValue({title:edited.title})
+            this.videoForm.markAsPristine()
+          }
+          this.alertColor='success'
+          this.alertMesg='Your clip was updated successfully.'
+        },
+        error:()=>{
+          this.inSubmission=false
+          this.alertColor='error'
+          this.alertMesg='Could not update this clip. Please try again.'
+        }
+      })
   }
 }

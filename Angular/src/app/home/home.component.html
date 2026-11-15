@@ -1,13 +1,13 @@
   <!-- Intro Section -->
-  <section class="relative overflow-hidden mb-2"> 
+  <section class="relative overflow-hidden">
     <!-- The video -->
-    <video autoplay muted loop class="w-full h-full object-cover absolute z-0">
+    <video autoplay muted loop playsinline class="absolute inset-0 h-full w-full object-cover z-0">
       <source src="assets/video/hero.webm" type="video/webm">
     </video>
 
-    <div class="bg-gradient absolute w-full h-full z-40 opacity-60"></div>
+    <div class="bg-gradient absolute inset-0 z-40 opacity-70"></div>
 
-    <div class="w-full h-full absolute z-40">
+    <div class="absolute inset-0 z-40">
       <div class="cube"></div>
       <div class="cube"></div>
       <div class="cube"></div>
@@ -15,22 +15,37 @@
       <div class="cube"></div>
     </div>
 
-    <div class="container mx-auto relative z-50">
-      <div class="text-center px-20 py-60 w-full md:w-8/12 mx-auto">
-        <h1 class="text-7xl font-bold uppercase mb-2">Clip it and ship it!</h1>
-        <p>
+    <div class="page-container relative z-50">
+      <div class="mx-auto max-w-3xl py-24 text-center sm:py-32 lg:py-40">
+        <span class="badge mb-6">Watch &middot; Clip &middot; Share</span>
+        <h1 class="text-4xl font-bold uppercase leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
+          Clip it and ship it!
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-gray-200/90 sm:text-lg">
           The #1 app to watch, clip, and share your awesome gaming moments
           with your friends and the world! With our world-class tools, we make
           it incredibly easy to share your videos. Get started today!
         </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a routerLink="/upload" class="btn btn-primary px-7 py-3 text-base">
+            <span class="material-icons text-base">cloud_upload</span>
+            Upload a clip
+          </a>
+          <a href="#latest" class="btn btn-ghost px-7 py-3 text-base">Browse clips</a>
+        </div>
       </div>
     </div>
   </section>
-  
-  <!-- Main Content -->
-  <section class="container mx-auto">
-    <h1 class="uppercase text-center text-4xl grid mt-20 mb-12 items-center gap-8 tracking-widest latest">Latest</h1>
 
-  <app-clips-list></app-clips-list>
+  <!-- Main Content -->
+  <section id="latest" class="page-container py-12 sm:py-16">
+    <div class="mb-8 flex flex-wrap items-end justify-between gap-3 border-b border-white/5 pb-5">
+      <div>
+        <h2 class="section-title">Latest clips</h2>
+        <p class="muted mt-1 text-sm">Fresh highlights from the community</p>
+      </div>
+      <a routerLink="/manage" class="nav-link hidden sm:inline-flex">Manage yours &rarr;</a>
+    </div>
+
+    <app-clips-list></app-clips-list>
   </section>
-  

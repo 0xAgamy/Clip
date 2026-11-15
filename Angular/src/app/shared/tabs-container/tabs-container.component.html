@@ -1,19 +1,13 @@
 <!-- Tabs -->
-<ul class="flex flex-wrap mb-4">
+<div class="mb-5 flex rounded-xl bg-black/20 p-1 ring-1 ring-white/5">
   @for (tab of tabs; track tab) {
-    <li class="flex-auto text-center">
-          <a class="block rounded py-3 px-4 transition hover:text-white text-white
-            bg-indigo-400" href="#" (click)="selectTab(tab)" 
-            [ngClass]="{
-              'hover:text-indigo-400':!tab.active,
-              'hover:text-white bg-indigo-400':tab.active
-            }">{{tab.tabTitle}}</a>
-    </li>
+    <a href="#" (click)="selectTab(tab)"
+      class="flex-1 rounded-lg px-4 py-2 text-center text-sm font-semibold transition-colors duration-200"
+      [ngClass]="{
+        'bg-indigo-500 text-white shadow': tab.active,
+        'text-gray-400 hover:text-white': !tab.active
+      }">{{tab.tabTitle}}</a>
   }
-  <!-- <li class="flex-auto text-center">
-  <a class="block rounded py-3 px-4 transition hover:text-indigo-400"
-  href="#">Register</a>
-</li> -->
-</ul>
+</div>
 
-<ng-content ></ng-content>
+<ng-content></ng-content>

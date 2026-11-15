@@ -1,60 +1,53 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpEvent, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IVideo } from '../model/ivideo';
 import { IVideoVm } from '../model/ivideo-vm';
-
+import {API_BASE_URL} from '../../shared/api-shared'
 @Injectable({
   providedIn: 'root'
 })
 export class VideoService {
-  httpOptions
-  public baseUrl = "https://localhost:7120/"
-  
-  constructor(private httpclient:HttpClient) { 
-    this.httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        
-        //Authorization: 'my-auth-token'
-      })
-    };
-  }
+
+  public baseUrl = API_BASE_URL
+
+  constructor(private httpclient: HttpClient) {}
 
 
   getVideos():Observable<IVideo[]>{
-    return this.httpclient.get<IVideo[]>("https://localhost:7120/api/Video")
+    return this.httpclient.get<IVideo[]>(`${this.baseUrl}/api/Video`)
   }
 
   
-  uploadVideo(modal:IVideoVm):Observable<IVideoVm>{
-    const fromdata= new FormData();
-    fromdata.append('videoFile',modal.VideoFile)
-    fromdata.append('thumbnail',modal.thumbnail) 
-    fromdata.append('userEmail',modal.userEmail)
-    fromdata.append('title',modal.title)
-    return this.httpclient.post<IVideoVm>("https://localhost:7120/api/Video",fromdata,{reportProgress:true})
+  uploadVideo(payload: IVideoVm): Observable<HttpEvent<{ id: number }>> {
+    const formData = new FormData();
+    formData.append('videoFile', payload.VideoFile);
+    formData.append('thumbnail', payload.thumbnail);
+    formData.append('title', payload.title)
+    return this.httpclient.post<{ id: number }>(`${this.baseUrl}/api/Video`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
 
 
   getClip(id:string):Observable<IVideo>{
-    return this.httpclient.get<IVideo>(`https://localhost:7120/api/Video/${id}`)
+    return this.httpclient.get<IVideo>(`${this.baseUrl}/api/Video/${id}`)
   }
 
-  getUserClips(userId:string):Observable<IVideo[]>{
-    const params =new HttpParams().set('userId',userId)
-    return this.httpclient.get<IVideo[]>(`https://localhost:7120/api/Video/user/${userId}`)
+  getUserClips():Observable<IVideo[]>{
+    return this.httpclient.get<IVideo[]>(`${this.baseUrl}/api/Video/user/`)
   }
 
   DeleteClip(id:number){
-    return this.httpclient.delete(`https://localhost:7120/api/Video/${id}`)
+    return this.httpclient.delete(`${this.baseUrl}/api/Video/${id}`)
   }
 
   RecommencClips(id:number):Observable<IVideo[]>{
-    return this.httpclient.get<IVideo[]>(`https://localhost:7120/api/Video/recommend/${id}`)
+    return this.httpclient.get<IVideo[]>(`${this.baseUrl}/api/Video/recommend/${id}`)
   }
-  EditClip(id:number,model:IVideoVm){
-    return this.httpclient.put(`https://localhost:7120/api/Video/${id}`,model)
+  EditClip(id:number,model:IVideoVm):Observable<IVideo>{
+    return this.httpclient.put<IVideo>(`${this.baseUrl}/api/Video/${id}`,model)
   }
 }

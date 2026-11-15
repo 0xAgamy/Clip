@@ -5,7 +5,6 @@ export interface IVideo {
     title:string,
     thumbnailUrl:string,
     videoUrl:string,
-    userId:string,
-    user:IUser,
+    userName:string,
     created:Date,
 }

@@ -1,13 +1,10 @@
-﻿using Clips_api.Data;
-using Clips_api.DTOs.Video;
-using Clips_api.Models;
+﻿using Clips_api.DTOs.Video;
 using Clips_api.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Net.Http.Headers;
+
+using System.Security.Claims;
 
 namespace Clips_api.Controllers
 {
@@ -29,14 +26,8 @@ namespace Clips_api.Controllers
         {
             var allVideo = await _videoServices.GetAllAsync();
             if (!ModelState.IsValid) return BadRequest("Something bad Happen");
-                     return Ok(allVideo);
-        }
-        [HttpGet("recommend/{id}")]
-        public async Task<IActionResult> RecommendVideos(int id)
-        {
-            var Clips = await _videoServices.RecommendAsync(id);
-            if (Clips == null) return NotFound();
-            return Ok(Clips);
+            
+            return Ok(allVideo);
         }
 
         [HttpGet("{id}")]
@@ -44,37 +35,49 @@ namespace Clips_api.Controllers
         {
             var video = await _videoServices.GetVideoAsync(id);
             if (video == null) return NotFound("The Video not Exist");
-            if (!ModelState.IsValid) return BadRequest("Something bad Happen");
+            
             return Ok(video);
         }
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUserVideos(string userId)
+        [HttpGet("user")]
+        [Authorize]
+        public async Task<IActionResult> GetUserVideos()
         {
+            var userId= User.FindFirstValue(ClaimTypes.NameIdentifier);
             var UserVideos = await _videoServices.GetUserVideosAsync(userId);
-            if (!ModelState.IsValid) return BadRequest("something bad Happen");
+            
             return Ok(UserVideos);
         }
         
         [HttpPost]
-        public async Task<IActionResult> UploadVideo([FromForm]VideoDto model)
+        [Authorize]
+        public async Task<IActionResult> UploadVideo([FromForm]UploadVideoDto model)
         {
-            var video = await _videoServices.Upload(model);
+            
+            var userEmail= User.FindFirstValue(ClaimTypes.Email);
+            var video= await _videoServices.UploadAsync(model,userEmail);
             return Ok(video);
+            
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteClip(int id)
         {
-            var clip = await _videoServices.DeleteAsync(id);
+            var userId= User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var clip = await _videoServices.DeleteAsync(id,userId!);
             if (clip == null) return NotFound("The clip not found");           
             return Ok(clip);
         }
 
 
         [HttpPut("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> EditClip(int id ,EditVideoDto model)
         {
-            var video = await _videoServices.EditAsync(id, model);
+            var userId= User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var video = await _videoServices.EditAsync(id, userId,model);
             if (video == null) return NotFound("The Edited Video Not Found");
             if (!ModelState.IsValid) return BadRequest("Something bad Happen");        
             return Ok(video);

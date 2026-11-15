@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup,FormControl,Validators } from '@angular/forms';
 import { IRegister } from '../userModels/register';
-import { UserServicesService } from '../UserServices/user-services.service';
+import { UserServices } from '../UserServices/user-services.service';
 
 @Component({
     selector: 'app-register',
@@ -14,9 +14,9 @@ import { UserServicesService } from '../UserServices/user-services.service';
 export class RegisterComponent {
   showAlert=false;
   alertMsg='Please Wait ! Your Acount is Begin Created'
-  alertColor='blue'
+  alertColor="info"
   ErorrMesg=[];
-  constructor(private userServices:UserServicesService) {
+  constructor(private userServices:UserServices) {
   
   }
 registerForm=new FormGroup({

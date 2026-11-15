@@ -6,7 +6,6 @@ import { TabsContainerComponent } from './tabs-container/tabs-container.componen
 import { TabComponent } from './tab/tab.component';
 import { AlertComponent } from './alert/alert.component';
 import { EventBlockerDirective } from './directives/event-blocker.directive';
-import { NgxCaptureModule } from 'ngx-capture';
 
 @NgModule({
   declarations: [
@@ -17,8 +16,7 @@ import { NgxCaptureModule } from 'ngx-capture';
     EventBlockerDirective
   ],
   imports: [
-    CommonModule,
-    NgxCaptureModule
+    CommonModule
 
   ],
   exports:[

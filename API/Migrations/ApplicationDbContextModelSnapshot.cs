@@ -97,34 +97,34 @@ namespace Clips_api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
-                    b.Property<DateTime?>("created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("thumbnail")
+                    b.Property<string>("VideoUrl")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("thumbnailUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("videoUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Videos");
+                    b.ToTable("Videos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -261,13 +261,13 @@ namespace Clips_api.Migrations
 
             modelBuilder.Entity("Clips_api.Models.Video", b =>
                 {
-                    b.HasOne("Clips_api.Models.User", "user")
+                    b.HasOne("Clips_api.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("user");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

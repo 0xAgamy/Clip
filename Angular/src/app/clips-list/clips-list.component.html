@@ -1,36 +1,47 @@
 <!-- Clips List -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-  @for (video of Videos; track video) {
+  @for (video of Videos; track video.id) {
     <a [routerLink]="['clip',video.id]"
-      class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-      <!-- Image -->
-      <img class="card-img-top rounded-tl-2xl w-full" [src]="url+video.thumbnailUrl" alt="there are and image">
-      <!-- Shape -->
-      <div class="relative">
-        <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
-          <div class="absolute bottom-full w-full pb-5 overflow-hidden">
-            <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="absolute bottom-0 w-full h-full tranform"
-              style="transform-origin: top center; transform: scale(2);">
-              <path d="M0 25h25L75 0h25v50H0z" fill="#283046"></path>
-            </svg>
-          </div>
-        </div>
+      class="group relative flex flex-col overflow-hidden rounded-2xl bg-[#1e2638] ring-1 ring-white/5 transition duration-300 hover:-translate-y-1.5 hover:ring-indigo-400/40 hover:shadow-2xl hover:shadow-indigo-500/10">
+
+      <!-- Thumbnail -->
+      <div class="relative aspect-video overflow-hidden bg-[#131a29]">
+        <img class="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-110"
+          [src]="video.thumbnailUrl" [alt]="video.title">
+
+        <!-- Readability overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0b1020] via-[#0b1020]/20 to-transparent"></div>
+
+        <!-- Play affordance -->
+        <span class="absolute inset-0 flex items-center justify-center">
+          <span class="flex h-14 w-14 scale-75 items-center justify-center rounded-full bg-white/10 text-white opacity-0 ring-1 ring-white/30 backdrop-blur-md transition-all duration-300 group-hover:scale-100 group-hover:bg-indigo-500 group-hover:opacity-100">
+            <span class="material-icons">play_arrow</span>
+          </span>
+        </span>
       </div>
+
       <!-- Body -->
-      <div class="p-8">
-        <!-- Heading -->
-        <h2 class="text-3xl mb-2">
+      <div class="relative flex flex-1 flex-col gap-4 p-5">
+        <h2 class="line-clamp-2 text-base font-semibold leading-snug text-white transition-colors duration-200 group-hover:text-indigo-300">
           {{video.title}}
         </h2>
-        <!-- Name & Date -->
-        <p class="mb-0">
-          {{  video.user.userName  }}&#183;
-          <span class="text-gray-400">{{video.created |date:'longDate'}}</span>
-        </p>
+
+        <!-- Author + date -->
+        <div class="mt-auto flex items-center gap-2.5">
+          <span class="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-indigo-500/20 text-sm font-bold uppercase text-indigo-300 ring-1 ring-inset ring-indigo-400/30">
+            {{ video.userName.charAt(0) }}
+          </span>
+          <div class="min-w-0">
+            <p class="truncate text-sm font-medium text-gray-200">{{ video.userName }}</p>
+            <p class="text-xs text-gray-500">{{video.created | date:'mediumDate'}}</p>
+          </div>
+          <span class="material-icons ml-auto flex-none text-lg text-gray-600 transition duration-300 group-hover:translate-x-0.5 group-hover:text-indigo-400">
+            arrow_forward
+          </span>
+        </div>
       </div>
     </a>
   }
-
 
 </div>

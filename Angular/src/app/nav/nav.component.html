@@ -1,56 +1,55 @@
-<header id="header" class="bg-secondary">
-  <nav class="container mx-auto flex justify-start items-center py-8 px-4">
+<header id="header" class="sticky top-0 z-40 border-b border-white/5 bg-[#161d31]/90 backdrop-blur">
+  <nav class="page-container flex flex-wrap items-center gap-x-4 gap-y-2 py-3 sm:py-4">
     <!-- App Name -->
-    <a class="text-3xl text-indigo-400 font-bold uppercase mr-4" href="/" >Clip</a>
+    <a routerLink="/" class="flex items-center gap-2 text-2xl font-bold uppercase tracking-[0.2em] text-white">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-sm font-black tracking-normal text-white">C</span>
+      Clip
+    </a>
 
-    <div class="flex flex-grow items-center">
+    <div class="flex flex-1 flex-wrap items-center">
       <!-- Primary Navigation -->
-      <ul class="flex flex-row mt-1">
-        <!-- Navigation Links -->
-        @if (!(user.user$ | async ) ) {
+      <ul class="flex flex-1 flex-wrap items-center gap-1">
+        @if (!(user.user$ | async)) {
           <li>
-            <a class="px-2 " href="#" (click)="openModal($event) " >Login / Register</a>
+            <a class="nav-link" href="#" (click)="openModal($event)">Login / Register</a>
           </li>
         } @else {
           <li>
-            <a class="px-2" routerLink="/manage" routerLinkActive="text-indigo-400" [queryParams]="{sort:'1'}">Manage</a>
+            <a class="nav-link" routerLink="/manage" routerLinkActive="nav-link-active" [queryParams]="{sort:'1'}">Manage</a>
           </li>
           <li>
-            <a class="px-2" routerLink="/upload" routerLinkActive="text-indigo-400" >Upload</a>
+            <a class="nav-link" routerLink="/upload" routerLinkActive="nav-link-active">Upload</a>
           </li>
         }
 
         <li>
-          @if ((user.user$ | async  )!=null) {
-            <a class="px-2" routerLink="/about" routerLinkActive="text-indigo-400" >About</a>
-          }
-        </li>
-        <li>
-          @if ((user.user$ | async  )!=null) {
-            <a class="px-2 " href="#"  (click)="Logout()" >Logout</a>
+          @if ((user.user$ | async) != null) {
+            <a class="nav-link" routerLink="/about" routerLinkActive="nav-link-active">About</a>
           }
         </li>
       </ul>
-      <!-- Language Switcher -->
-      <ul class="flex flex-row ml-auto">
-        @if ((user.user$ | async ); as U) {
+
+      <!-- Account / Language -->
+      <ul class="ml-auto flex items-center gap-2">
+        @if ((user.user$ | async); as U) {
+          <li class="hidden items-center gap-2 rounded-full bg-white/5 py-1 pl-1 pr-3 text-sm text-gray-300 sm:flex">
+            <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold uppercase text-white">
+              {{ U.name.charAt(0) }}
+            </span>
+            Welcome, {{ U.name }}
+          </li>
           <li>
-            <a class="px-2"   >Wlecome {{U.name}} !</a>
+            <button type="button" class="btn btn-ghost px-3 py-1.5 text-xs" (click)="Logout()">
+              <span class="material-icons text-base">logout</span>
+              Logout
+            </button>
           </li>
         }
 
         <li>
-          <a href="#">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC"
-              alt="en" width="22" height="14" class="inline-block">
-            <span class="ml-1">English</span>
-          </a>
-        </li>
-        <li style="display: none;">
-          <a href="#">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAHlBMVEUpQqK2q8384OL3qa/tKTkAI5Wrt9z////5t7ztKTlzpJCAAAAABXRSTlP++vjs1BQWlgsAAAAxSURBVHgBYmRAA4yKaAJCAugqQgHtyzENAAAAAiD7pzaDr4MfRVEURVGU36IoipK5FLWNJ6UFusbWAAAAAElFTkSuQmCC"
-              alt="fr" width="22" height="14" class="inline-block">
-            <span class="ml-1">French</span>
+          <a href="#" class="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-gray-400 transition hover:bg-white/5 hover:text-white" title="Language">
+            <span class="material-icons text-base">language</span>
+            <span class="hidden sm:inline">EN</span>
           </a>
         </li>
       </ul>

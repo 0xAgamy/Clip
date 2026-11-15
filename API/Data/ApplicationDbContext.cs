@@ -10,7 +10,12 @@ namespace Clips_api.Data
         {
             
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Video>().ToTable("Videos");
+        }
         
-        public DbSet<Video> Videos { get; set; }
+        // public DbSet<Video> Videos { get; set; }
     }
 }
