@@ -29,9 +29,7 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "allowedCommonJsDependencies": [
-              "html2canvas"
-            ],
+            "allowedCommonJsDependencies": [],
             "browser": "src/main.ts"
           },
           "configurations": {

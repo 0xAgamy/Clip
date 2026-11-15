@@ -19,7 +19,7 @@ id:string=''
 //
 
 showAlert=false;
-alertColor='blue';
+alertColor='info';
 alertMesg='Please Wait ! Your Clip is being uploaded.'
 inSubmission=false;
 

@@ -1,7 +1,5 @@
 export interface IVideoVm {
-    VideoFile:File,
-    thumbnail:File,
-    userEmail:string,
-    title:string,
+    VideoFile: File,
+    thumbnail: File,
+    title: string,
 }
-

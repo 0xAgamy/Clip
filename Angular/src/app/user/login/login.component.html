@@ -1,7 +1,7 @@
 <!-- Login Form -->
 <form [formGroup]="loginForm" (submit)="login()">
   @if (showAlert) {
-    <app-alert  [color]="alertColor">
+    <app-alert  >
       {{alertMsg}}
     </app-alert>
   }

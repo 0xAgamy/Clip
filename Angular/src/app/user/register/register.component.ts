@@ -14,7 +14,7 @@ import { UserServices } from '../UserServices/user-services.service';
 export class RegisterComponent {
   showAlert=false;
   alertMsg='Please Wait ! Your Acount is Begin Created'
-  alertColor='blue'
+  alertColor="info"
   ErorrMesg=[];
   constructor(private userServices:UserServices) {
   

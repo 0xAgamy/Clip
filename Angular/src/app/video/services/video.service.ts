@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpEvent, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IVideo } from '../model/ivideo';
@@ -9,18 +9,9 @@ import {API_BASE_URL} from '../../shared/api-shared'
 })
 export class VideoService {
 
-  httpOptions
   public baseUrl = API_BASE_URL
-  
-  constructor(private httpclient:HttpClient) { 
-    this.httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        
-        //Authorization: 'my-auth-token'
-      })
-    };
-  }
+
+  constructor(private httpclient: HttpClient) {}
 
 
   getVideos():Observable<IVideo[]>{
@@ -28,13 +19,15 @@ export class VideoService {
   }
 
   
-  uploadVideo(modal:IVideoVm):Observable<IVideoVm>{
-    const fromdata= new FormData();
-    fromdata.append('videoFile',modal.VideoFile)
-    fromdata.append('thumbnail',modal.thumbnail) 
-    fromdata.append('userEmail',modal.userEmail)
-    fromdata.append('title',modal.title)
-    return this.httpclient.post<IVideoVm>(`${this.baseUrl}/api/Video`,fromdata,{reportProgress:true})
+  uploadVideo(payload: IVideoVm): Observable<HttpEvent<{ id: number }>> {
+    const formData = new FormData();
+    formData.append('videoFile', payload.VideoFile);
+    formData.append('thumbnail', payload.thumbnail);
+    formData.append('title', payload.title)
+    return this.httpclient.post<{ id: number }>(`${this.baseUrl}/api/Video`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
 

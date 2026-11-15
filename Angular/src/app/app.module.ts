@@ -12,7 +12,6 @@ import { AboutComponent } from './about/about.component';
 import { VideoModule } from './video/video.module';
 import { ClipComponent } from './clip/clip.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { NgxCaptureModule } from 'ngx-capture';
 import { ClipsListComponent } from './clips-list/clips-list.component';
 import {authInterceptor} from './shared/interceptors/auth.interceptor'
 import {errorInterceptor} from './shared/interceptors/error.interceptor'
@@ -31,8 +30,7 @@ import {errorInterceptor} from './shared/interceptors/error.interceptor'
     bootstrap: [AppComponent], imports: [BrowserModule,
         VideoModule,
         AppRoutingModule,
-        UserModule,
-        NgxCaptureModule], providers:
+        UserModule], providers:
          [provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
 
 

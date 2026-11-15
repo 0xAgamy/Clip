@@ -1,153 +1,207 @@
-import { ThisReceiver } from '@angular/compiler';
-import { Component, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup,FormControl,Validators } from '@angular/forms';
-import { delay, Observable, takeLast } from 'rxjs';
-import { NgxCaptureService } from 'ngx-capture';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { VideoService } from '../services/video.service';
 import { IVideoVm } from '../model/ivideo-vm';
-import { Route, Router } from '@angular/router';
-import { UserServices } from '../../user/UserServices/user-services.service';
-import { IUser } from '../../user/userModels/iuser';
+
+type UploadState = 'idle' | 'selected' | 'uploading' | 'done' | 'error';
+type AlertColor = 'info' | 'success' | 'error';
 
 @Component({
     selector: 'app-upload',
     templateUrl: './upload.component.html',
     styleUrls: ['./upload.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class UploadComponent {
-  testthubmnailfile:File|null=null
-  //
-  UserEmail?:string=''
-  @ViewChild('capture')capture?:ElementRef
-  screenshot:string='';
-  imgfile:File|null=null;
-    showAlert=false;
-    alertColor='blue';
-    alertMesg='Please Wait ! Your Clip is being uploaded.'
-    inSubmission=false;
-      //  
-      videosource?:string='';
-      //
-      nextstep=false;
-      isDragOver=false;
-      videofile:File|null=null
+export class UploadComponent implements OnDestroy {
+  // upload flow state
+  uploadState: UploadState = 'idle';
+  progress = 0;
 
-      title = new FormControl('',[Validators.required,Validators.minLength(3)])
-      videoForm=new FormGroup({
-        title:this.title
-      })
-     constructor(private ngxCap:NgxCaptureService
-      ,private VideoServices:VideoService
-      ,private Route:Router
-      ,private userServices:UserServices) {
-      this.userServices.user$.subscribe(user=>{
-        this.UserEmail=user?.email
-      })
-      
-     }
-//
+  // feedback
+  showAlert = false;
+  alertColor: AlertColor = 'info';
+  alertMessage = '';
 
-captureImages(){
-      
-  this.ngxCap.getImage(this.capture?.nativeElement,true).subscribe((img)=>{
-    this.screenshot=img
-      console.log(this.screenshot)
-  })
-}
-dataURItoBlob(dataURI:string) {
-  const byteString = window.atob(dataURI);
-  const arrayBuffer = new ArrayBuffer(byteString.length);
-  const int8Array = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < byteString.length; i++) {
-    int8Array[i] = byteString.charCodeAt(i);
+  // step 1 (file selection)
+  isDragOver = false;
+  nextStep = false;
+
+  // files
+  videoFile: File | null = null;
+  thumbnailFile: File | null = null;
+
+  // object-URL previews (constant memory — never base64)
+  videoPreviewUrl: string | null = null;
+  thumbnailPreviewUrl: string | null = null;
+  private videoObjectUrl: string | null = null;
+  private thumbnailObjectUrl: string | null = null;
+
+  title = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  videoForm = new FormGroup({ title: this.title });
+
+  @ViewChild('videoPlayer') videoPlayer?: ElementRef<HTMLVideoElement>;
+
+  constructor(private videoService: VideoService, private router: Router) {}
+
+  // ---- Step 1: select / drop the video -------------------------------------
+
+  storeFile(event: Event): void {
+    this.isDragOver = false;
+
+    let file: File | null = null;
+    if (event instanceof DragEvent) {
+      file = event.dataTransfer?.files.item(0) ?? null;
+    } else {
+      const input = event.target as HTMLInputElement;
+      file = input.files?.item(0) ?? null;
+      input.value = ''; // allow re-selecting the same file later
+    }
+    if (!file) return;
+
+    if (file.type !== 'video/mp4') {
+      this.showAlert = true;
+      this.alertColor = 'error';
+      this.alertMessage = 'Only MP4 videos are supported.';
+      return;
+    }
+    this.showAlert = false;
+
+    this.resetPreview();
+    this.videoFile = file;
+    this.videoObjectUrl = URL.createObjectURL(file);
+    this.videoPreviewUrl = this.videoObjectUrl;
+
+    this.title.setValue(file.name.replace(/\.[^/.]+$/, ''));
+    this.nextStep = true;
+    this.uploadState = 'selected';
   }
-  const blob = new Blob([int8Array], { type: 'image/png' });
-  return blob;
-}
-converttofile(){
-    const imgName= this.TitleName!.concat("Thubmnail.png");
-    const im=this.screenshot.split(',')[1];
-    const imgblob=this.dataURItoBlob(im);
-    this.imgfile=new File([imgblob],imgName,{ type :'image/png' })
-    
-}
 
+  backToUpload(): void {
+    this.nextStep = false;
+    this.resetPreview();
+    this.uploadState = 'idle';
+    this.progress = 0;
+  }
 
+  // ---- Step 2: thumbnail from a video frame (canvas, no extra deps) --------
 
-
-
-     //
-      storeFile($event:Event){
-        this.isDragOver=false;
-        this.videofile=($event as DragEvent).dataTransfer?.files.item(0)??null
-        if(!this.videofile || this.videofile.type!=='video/mp4')return
-        let reader=new FileReader()
-        reader.readAsDataURL(this.videofile)
-        reader.onload=()=>{
-          var bb64=reader.result?.toString()
-          this.videosource=bb64;  
-        }
-        this.title.setValue(
-          this.videofile.name.replace(/\.[^/.]+$/,''))   
-              
-        this.nextstep=true;
+  onVideoLoaded(): void {
+    if (!this.thumbnailFile) {
+      this.generateThumbnail();
     }
+  }
 
-    backToUpload(){
-      this.nextstep=false;
+  async generateThumbnail(): Promise<void> {
+    const video = this.videoPlayer?.nativeElement;
+    if (!video || !video.videoWidth) return;
+
+    try {
+      const file = await this.captureThumbnail(video);
+      if (!file) return;
+
+      if (this.thumbnailObjectUrl) URL.revokeObjectURL(this.thumbnailObjectUrl);
+      this.thumbnailFile = file;
+      this.thumbnailObjectUrl = URL.createObjectURL(file);
+      this.thumbnailPreviewUrl = this.thumbnailObjectUrl;
+    } catch (err) {
+      console.error('Thumbnail capture failed', err);
+      this.showAlert = true;
+      this.alertColor = 'error';
+      this.alertMessage = 'Could not capture a thumbnail from this video.';
     }
+  }
 
-    uploadVideo(){
-      this.converttofile()
-      this.showAlert=true;
-      this.alertColor='blue'
-      this.alertMesg='Please Wait ! Your Clip is being uploaded.'
-      this.inSubmission=true;
+  private async captureThumbnail(video: HTMLVideoElement): Promise<File | null> {
+    if (!video.duration) return null;
 
-      let VideoVM={
-      VideoFile:this.videofile,
-      thumbnail:this.imgfile,
-      userEmail:this.UserEmail,
-      title:this.TitleName,
-      }as IVideoVm
+    // 30% into the video is usually a good frame
+    await this.seekTo(video, video.duration * 0.3);
 
-      console.log(VideoVM);
-    this.VideoServices.uploadVideo(VideoVM).subscribe({
-      
-      next:(rse)=>{
-        console.log(rse)
-        console.log("resoponose")
-      },
-      error:(err)=>{
-        console.log("there are an error")
-        console.log(err)
-      }
+    const maxWidth = 640;
+    const scale = Math.min(1, maxWidth / video.videoWidth);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(video.videoWidth * scale);
+    canvas.height = Math.round(video.videoHeight * scale);
+
+    const context = canvas.getContext('2d');
+    if (!context) return null;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, 'image/jpeg', 0.8));
+    if (!blob) return null;
+
+    return new File([blob], 'thumbnail.jpg', { type: 'image/jpeg' });
+  }
+
+  private seekTo(video: HTMLVideoElement, seconds: number): Promise<void> {
+    return new Promise((resolve) => {
+      const onSeeked = () => {
+        video.removeEventListener('seeked', onSeeked);
+        resolve();
+      };
+      video.addEventListener('seeked', onSeeked);
+      video.currentTime = seconds;
     });
-      
-      // if(this.inSubmission){
-      
-      //   this.Route.navigateByUrl("/") 
-      // }
-
-    }
-
-
-    get TitleName(){
-      return this.videoForm.get('title')?.value;
-    }
-
-    // Getthumbnail(event:Event){
-    //     this.testthubmnailfile=  (event as DragEvent).dataTransfer?.files.item(0)??null
-    //     if(this.testthubmnailfile!=null)
-    //       console.log("threre is a file")
-    //     console.log(this.testthubmnailfile)
-    //     console.log("i'm in get Thumb")
-    // }
   }
 
+  // ---- Step 3: upload with progress ----------------------------------------
 
+  uploadVideo(): void {
+    if (!this.videoFile || !this.thumbnailFile || this.videoForm.invalid) return;
 
+    const payload = {
+      VideoFile: this.videoFile,
+      thumbnail: this.thumbnailFile,
+      title: this.title.value ?? '',
+    } as IVideoVm;
 
+    this.showAlert = true;
+    this.alertColor = 'info';
+    this.alertMessage = 'Please wait — your clip is being uploaded.';
+    this.uploadState = 'uploading';
+    this.progress = 0;
 
+    this.videoService.uploadVideo(payload).subscribe({
+      next: (event: HttpEvent<{ id: number }>) => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          this.progress = Math.round((100 * event.loaded) / event.total);
+        } else if (event.type === HttpEventType.Response) {
+          this.uploadState = 'done';
+          this.alertColor = 'success';
+          this.alertMessage = 'Upload complete! Redirecting...';
+          if (event.body?.id != null) {
+            this.router.navigate(['/clip', event.body.id]);
+          }
+        }
+      },
+      error: (err) => {
+        this.uploadState = 'error';
+        this.alertColor = 'error';
+        this.alertMessage = typeof err?.error === 'string'
+          ? err.error
+          : 'Upload failed. Please try again.';
+        this.progress = 0;
+      },
+    });
+  }
+
+  // ---- cleanup ---------------------------------------------------------------
+
+  private resetPreview(): void {
+    if (this.videoObjectUrl) URL.revokeObjectURL(this.videoObjectUrl);
+    if (this.thumbnailObjectUrl) URL.revokeObjectURL(this.thumbnailObjectUrl);
+    this.videoObjectUrl = null;
+    this.thumbnailObjectUrl = null;
+    this.videoPreviewUrl = null;
+    this.thumbnailPreviewUrl = null;
+    this.videoFile = null;
+    this.thumbnailFile = null;
+  }
+
+  ngOnDestroy(): void {
+    this.resetPreview();
+  }
+}
