@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {ModalService} from "../../services/modal.service"
 import { IVideo } from '../model/ivideo';
@@ -35,8 +34,8 @@ loadVideos(){
       next:(video)=>{
         this.UserVideos=video;
       },
-      error:(err)=>{
-        // console.log(err)
+      error:()=>{
+        /* surfaced by the error interceptor */
       }
     })
 }

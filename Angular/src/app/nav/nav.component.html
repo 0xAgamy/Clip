@@ -1,3 +1,4 @@
+@let currentUser = user.user$ | async;
 <header id="header" class="sticky top-0 z-40 border-b border-white/5 bg-[#161d31]/90 backdrop-blur">
   <nav class="page-container flex flex-wrap items-center gap-x-4 gap-y-2 py-3 sm:py-4">
     <!-- App Name -->
@@ -9,7 +10,7 @@
     <div class="flex flex-1 flex-wrap items-center">
       <!-- Primary Navigation -->
       <ul class="flex flex-1 flex-wrap items-center gap-1">
-        @if (!(user.user$ | async)) {
+        @if (!currentUser) {
           <li>
             <a class="nav-link" href="#" (click)="openModal($event)">Login / Register</a>
           </li>
@@ -23,7 +24,7 @@
         }
 
         <li>
-          @if ((user.user$ | async) != null) {
+          @if (currentUser !== null && currentUser !== undefined) {
             <a class="nav-link" routerLink="/about" routerLinkActive="nav-link-active">About</a>
           }
         </li>
@@ -31,12 +32,12 @@
 
       <!-- Account / Language -->
       <ul class="ml-auto flex items-center gap-2">
-        @if ((user.user$ | async); as U) {
+        @if (currentUser) {
           <li class="hidden items-center gap-2 rounded-full bg-white/5 py-1 pl-1 pr-3 text-sm text-gray-300 sm:flex">
             <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold uppercase text-white">
-              {{ U.name.charAt(0) }}
+              {{ currentUser.name.charAt(0) }}
             </span>
-            Welcome, {{ U.name }}
+            Welcome, {{ currentUser.name }}
           </li>
           <li>
             <button type="button" class="btn btn-ghost px-3 py-1.5 text-xs" (click)="Logout()">

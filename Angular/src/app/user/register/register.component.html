@@ -73,7 +73,7 @@
       <input id="register-confirm" type="password" class="input-field" placeholder="Confirm Password"
         formControlName="confirm_password" autocomplete="new-password" />
       @if (confirmPassword.touched) {
-        @if (Password.value != confirmPassword.value) {
+        @if (Password.value !== confirmPassword.value) {
           <div class="form-error">Confirm Password doesn't match Password</div>
         }
       }

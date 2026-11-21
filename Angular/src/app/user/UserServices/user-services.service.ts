@@ -31,7 +31,7 @@ export class UserServices {
 
     this.router.events.pipe(
       filter(e=>e instanceof NavigationEnd),
-      map(e=>this.activeRoute.firstChild),
+      map(() => this.activeRoute.firstChild),
       switchMap(route=>route?.data ?? of({}))
     ).subscribe((data: Data)=>{
       this.redirect=data['authOnly'] ?? false

@@ -50,7 +50,7 @@ export class UploadComponent implements OnDestroy {
   storeFile(event: Event): void {
     this.isDragOver = false;
 
-    let file: File | null = null;
+    let file: File | null;
     if (event instanceof DragEvent) {
       file = event.dataTransfer?.files.item(0) ?? null;
     } else {

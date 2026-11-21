@@ -6,10 +6,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) =>
       catchError((err) => {
 
         console.error("[API]", req.method, req.url, err.status, err.message);
-        if (err.status === 401) {
-      
-        }
-        return throwError(() => err);   
+        return throwError(() => err);
       })
     );
       

@@ -73,13 +73,12 @@ Register(){
   this.showAlert=true;
   this. alertMsg='Please Wait ! Your Acount is Begin Created';
   this.alertColor='blue';
-  let user = {
+  const user = {
     userName:this.registerForm.value.name,
     email:this.registerForm.value.email,
     password:this.registerForm.value.password,
     phoneNumber:this.registerForm.value.phoneNumber,
   }as IRegister;
-  let u 
 
   if(this.registerForm.valid){
   this.userServices.register(user).subscribe({

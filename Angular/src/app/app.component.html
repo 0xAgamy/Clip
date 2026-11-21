@@ -1,7 +1,8 @@
+@let currentUser = UserService.userwithdelay$ | async;
 <!-- Header -->
 <app-nav></app-nav>
 <!-- Auth Modal -->
-@if (!(UserService.userwithdelay$|async)) {
-  <app-auth ></app-auth>
+@if (!currentUser) {
+  <app-auth></app-auth>
 }
 <router-outlet></router-outlet>

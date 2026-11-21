@@ -20,8 +20,8 @@ ngOnInit(): void {
     const jwt =this.UserService.getJWT();
     if(jwt){
       this.UserService.RefreshUser(jwt).subscribe({
-        next:_ =>{},
-        error: _=>{
+        next: () => {},
+        error: () => {
           this.UserService.Logout();
         },
 

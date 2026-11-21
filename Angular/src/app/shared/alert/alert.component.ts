@@ -16,19 +16,6 @@ COLOR_CLASSES={
 } as const;
 @Input() alertColor: keyof typeof this.COLOR_CLASSES = "info";
 
-// @Input()color:string='blue'
-
-
-
-
-constructor() {
-  const COLOR_CLASSES={
-      info:    "bg-indigo-900",
-      success:  "bg-green-600",
-      error:   "bg-red-600",
-  } as const;
-  }
-
 get bgcolor(): string {
   return this.COLOR_CLASSES[this.alertColor] ?? this.COLOR_CLASSES.info;
 }

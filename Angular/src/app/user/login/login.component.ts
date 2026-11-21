@@ -1,7 +1,5 @@
-import { getLocaleCurrencySymbol } from '@angular/common';
-import { Component, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup,FormControl,Validators } from '@angular/forms';
-import { IUser } from '../userModels/iuser';
 import { ILogin } from '../userModels/login';
 import { UserServices } from '../UserServices/user-services.service';
 
@@ -12,7 +10,7 @@ import { UserServices } from '../UserServices/user-services.service';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent {
 loginForm:FormGroup;
 Authenticatd=false;
 showAlert=false;
@@ -33,16 +31,11 @@ get Email(){
 get Password(){
   return this.loginForm.get('password');}
 
-
-  ngOnInit(): void {
- 
- 
-}
 login(){
-  let loginmodal:ILogin= this.loginForm.value;
+  const loginmodal:ILogin= this.loginForm.value;
 
   if(this.loginForm.valid){
-    this.UserServices.Login(loginmodal).subscribe(u=>{
+    this.UserServices.Login(loginmodal).subscribe(() => {
    
     }
     );

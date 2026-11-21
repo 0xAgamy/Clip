@@ -24,7 +24,7 @@ constructor( public router:ActivatedRoute,private videoServices:VideoService) {
         this.video=v
         console.log(this.video)
       });
-      let ID =+this.id
+      const ID = +this.id
       this.videoServices.RecommencClips(ID).subscribe(v=>{
         this.topVideo=v
       })
