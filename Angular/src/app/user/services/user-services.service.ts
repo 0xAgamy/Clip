@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { IRegister } from '../userModels/register';
+import { IRegister } from '../models/register';
 import { delay, map, Observable, of, ReplaySubject, filter, switchMap } from 'rxjs';
-import { ILogin } from '../userModels/login';
-import { IUser } from '../userModels/iuser';
+import { ILogin } from '../models/login';
+import { IUser } from '../models/iuser';
 import { ActivatedRoute, Router, NavigationEnd, Data } from '@angular/router';
 import { API_BASE_URL } from '../../shared/api-shared';
 

@@ -1,7 +1,7 @@
 import { Component, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ILogin } from '../userModels/login';
-import { UserServices } from '../UserServices/user-services.service';
+import { ILogin } from '../models/login';
+import { UserServices } from '../services/user-services.service';
 
 @Component({
   selector: 'app-login',

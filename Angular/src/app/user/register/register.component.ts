@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { IRegister } from '../userModels/register';
-import { UserServices } from '../UserServices/user-services.service';
+import { IRegister } from '../models/register';
+import { UserServices } from '../services/user-services.service';
 
 @Component({
   selector: 'app-register',
