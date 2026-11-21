@@ -24,7 +24,6 @@ export class ClipComponent implements OnInit {
       this.id = params['id'];
       this.videoServices.getClip(this.id).subscribe((v) => {
         this.video = v;
-        console.log(this.video);
       });
       const ID = +this.id;
       this.videoServices.RecommencClips(ID).subscribe((v) => {

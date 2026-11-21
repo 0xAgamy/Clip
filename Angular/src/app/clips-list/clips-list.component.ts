@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IVideo } from '../video/model/ivideo';
 import { VideoService } from '../video/services/video.service';
 
@@ -9,26 +9,13 @@ import { VideoService } from '../video/services/video.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class ClipsListComponent implements OnInit, OnDestroy {
+export class ClipsListComponent implements OnInit {
   Videos: IVideo[] = [];
   constructor(private videoServices: VideoService) {}
 
   ngOnInit(): void {
-    window.addEventListener('scroll', this.handleScrolling);
-
     this.videoServices.getVideos().subscribe((v) => {
       this.Videos = v;
-      console.log(this.Videos);
     });
-  }
-
-  handleScrolling = () => {
-    const { scrollTop, offsetHeight } = document.documentElement;
-    const { innerHeight } = window;
-    const bottomOfWindo = Math.round(scrollTop) + innerHeight === offsetHeight;
-    if (bottomOfWindo) console.log('bootom');
-  };
-  ngOnDestroy(): void {
-    window.removeEventListener('scroll', this.handleScrolling);
   }
 }

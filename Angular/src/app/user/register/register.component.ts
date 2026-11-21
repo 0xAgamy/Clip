@@ -69,12 +69,8 @@ export class RegisterComponent {
 
     if (this.registerForm.valid) {
       this.userServices.register(user).subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (error) => {
-          console.log(error);
-        },
+        next: () => {},
+        error: () => {},
       });
     }
   }

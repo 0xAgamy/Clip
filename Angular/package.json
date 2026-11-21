@@ -20,12 +20,8 @@
     "@angular/platform-browser": "^22.2.4",
     "@angular/platform-browser-dynamic": "^22.2.4",
     "@angular/router": "^22.2.4",
-    "@types/videojs": "^5.16.2",
-    "@videojs/themes": "^1.0.1",
-    "ngx-mask": "^22.2.5",
     "rxjs": "~7.8.2",
     "tslib": "^2.3.0",
-    "video.js": "^8.3.0",
     "zone.js": "^0.16.3"
   },
   "devDependencies": {
