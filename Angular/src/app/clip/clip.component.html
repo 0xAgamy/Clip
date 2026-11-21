@@ -1,22 +1,27 @@
 <!-- Main Content -->
 <section class="page-container py-8">
-
   @if (video) {
     <div class="grid gap-8 lg:grid-cols-3">
-
       <!-- Video Player -->
       <div class="lg:col-span-2">
         <div class="surface-card overflow-hidden">
-          <video class="aspect-video w-full bg-black" [src]="video.videoUrl" type="video/mp4" controls></video>
+          <video
+            class="aspect-video w-full bg-black"
+            [src]="video.videoUrl"
+            type="video/mp4"
+            controls
+          ></video>
         </div>
 
         <!-- Title and Uploader -->
-        <h1 class="mt-6 text-2xl font-bold leading-tight text-white sm:text-3xl">{{video.title}}</h1>
+        <h1 class="mt-6 text-2xl font-bold leading-tight text-white sm:text-3xl">
+          {{ video.title }}
+        </h1>
         <div class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-400">
           <span class="material-icons text-base">person</span>
-          <span class="text-gray-300">Uploaded by {{video.userName}}</span>
+          <span class="text-gray-300">Uploaded by {{ video.userName }}</span>
           <span class="text-gray-600">&middot;</span>
-          <span>{{video.created | date:'longDate'}}</span>
+          <span>{{ video.created | date: 'longDate' }}</span>
         </div>
       </div>
 
@@ -27,15 +32,23 @@
         @if (topVideo.length) {
           <div class="space-y-3">
             @for (clip of topVideo; track clip.id) {
-              <a [routerLink]="['/clip',clip.id]"
-                class="group flex gap-3 rounded-xl bg-[#283046] p-2 ring-1 ring-white/5 transition duration-200 hover:bg-white/5 hover:ring-indigo-400/30">
-                <img class="h-16 w-28 flex-none rounded-lg object-cover" [src]="clip.thumbnailUrl" [alt]="clip.title">
+              <a
+                [routerLink]="['/clip', clip.id]"
+                class="group flex gap-3 rounded-xl bg-[#283046] p-2 ring-1 ring-white/5 transition duration-200 hover:bg-white/5 hover:ring-indigo-400/30"
+              >
+                <img
+                  class="h-16 w-28 flex-none rounded-lg object-cover"
+                  [src]="clip.thumbnailUrl"
+                  [alt]="clip.title"
+                />
 
                 <div class="min-w-0 py-1">
-                  <h3 class="line-clamp-2 text-sm font-semibold text-white transition-colors duration-200 group-hover:text-indigo-300">
-                    {{clip.title}}
+                  <h3
+                    class="line-clamp-2 text-sm font-semibold text-white transition-colors duration-200 group-hover:text-indigo-300"
+                  >
+                    {{ clip.title }}
                   </h3>
-                  <p class="mt-1 truncate text-xs text-gray-400">{{clip.userName}}</p>
+                  <p class="mt-1 truncate text-xs text-gray-400">{{ clip.userName }}</p>
                 </div>
               </a>
             }
@@ -44,8 +57,6 @@
           <p class="muted text-sm">No related clips yet.</p>
         }
       </aside>
-
     </div>
   }
-
 </section>

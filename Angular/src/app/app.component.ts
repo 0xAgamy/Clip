@@ -2,35 +2,28 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UserServices } from './user/UserServices/user-services.service';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
-export class AppComponent implements OnInit  {
-
-  constructor(public UserService:UserServices) {
-    
+export class AppComponent implements OnInit {
+  constructor(public UserService: UserServices) {}
+  ngOnInit(): void {
+    this.RefreshUser();
   }
-ngOnInit(): void {
-    this.RefreshUser(); 
-}
-  private RefreshUser(){
-    const jwt =this.UserService.getJWT();
-    if(jwt){
+  private RefreshUser() {
+    const jwt = this.UserService.getJWT();
+    if (jwt) {
       this.UserService.RefreshUser(jwt).subscribe({
         next: () => {},
         error: () => {
           this.UserService.Logout();
         },
-
-      })
-    }else{
+      });
+    } else {
       this.UserService.RefreshUser(null).subscribe();
     }
   }
-
-
-
 }

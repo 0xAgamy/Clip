@@ -5,79 +5,77 @@ import { IVideo } from '../model/ivideo';
 import { VideoService } from '../services/video.service';
 import { IVideoVm } from '../model/ivideo-vm';
 
-
 @Component({
-    selector: 'app-edit',
-    templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-edit',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditComponent implements OnInit {
-Video!:IVideo
-id:string=''
-//
+  Video!: IVideo;
+  id: string = '';
+  //
 
-showAlert=false;
-alertColor:'info'|'success'|'error'='info';
-alertMesg=''
-inSubmission=false;
+  showAlert = false;
+  alertColor: 'info' | 'success' | 'error' = 'info';
+  alertMesg = '';
+  inSubmission = false;
 
-  title = new FormControl('',[Validators.required,Validators.minLength(3)])
-  videoForm=new FormGroup({
-    title:this.title
-  })
-    constructor(private VideoServices:VideoService,
-      private activeRouter:ActivatedRoute,
-      ) {
+  title = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  videoForm = new FormGroup({
+    title: this.title,
+  });
+  constructor(
+    private VideoServices: VideoService,
+    private activeRouter: ActivatedRoute,
+  ) {}
 
+  ngOnInit() {
+    this.activeRouter.paramMap.subscribe((paramsmap) => {
+      this.id = String(paramsmap.get('id'));
+      this.VideoServices.getClip(this.id).subscribe((v) => {
+        this.Video = v;
+        this.videoForm.patchValue({ title: v.title });
+      });
+    });
+  }
+
+  get TitleName() {
+    return this.Video?.title ?? '';
+  }
+
+  Edit() {
+    if (this.videoForm.invalid || this.inSubmission) {
+      return;
     }
 
-    ngOnInit() {
-        this.activeRouter.paramMap.subscribe((paramsmap)=>{
-            this.id=String(paramsmap.get('id'))
-            this.VideoServices.getClip(this.id).subscribe(v=>{
-            this.Video=v
-            this.videoForm.patchValue({title:v.title})
-            })
-          })
+    const editedVideo = {
+      title: this.videoForm.get('title')?.value,
+    } as IVideoVm;
+    const ID = +this.id;
 
+    this.inSubmission = true;
+    this.showAlert = true;
+    this.alertColor = 'info';
+    this.alertMesg = 'Saving your changes...';
+
+    this.VideoServices.EditClip(ID, editedVideo).subscribe({
+      next: (edited) => {
+        this.inSubmission = false;
+        if (edited) {
+          this.Video = edited;
+          this.videoForm.patchValue({ title: edited.title });
+          this.videoForm.markAsPristine();
         }
-
-
-    get TitleName(){
-    return this.Video?.title ?? ''
-    }
-
-  Edit(){
-      if(this.videoForm.invalid || this.inSubmission){return}
-
-      const editedVideo={
-        title:this.videoForm.get('title')?.value
-      }as IVideoVm
-      const ID = + this.id
-
-      this.inSubmission=true
-      this.showAlert=true
-      this.alertColor='info'
-      this.alertMesg='Saving your changes...'
-
-      this.VideoServices.EditClip(ID,editedVideo).subscribe({
-        next:(edited)=>{
-          this.inSubmission=false
-          if(edited){
-            this.Video=edited
-            this.videoForm.patchValue({title:edited.title})
-            this.videoForm.markAsPristine()
-          }
-          this.alertColor='success'
-          this.alertMesg='Your clip was updated successfully.'
-        },
-        error:()=>{
-          this.inSubmission=false
-          this.alertColor='error'
-          this.alertMesg='Could not update this clip. Please try again.'
-        }
-      })
+        this.alertColor = 'success';
+        this.alertMesg = 'Your clip was updated successfully.';
+      },
+      error: () => {
+        this.inSubmission = false;
+        this.alertColor = 'error';
+        this.alertMesg = 'Could not update this clip. Please try again.';
+      },
+    });
   }
 }

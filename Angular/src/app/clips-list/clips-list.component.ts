@@ -3,41 +3,32 @@ import { IVideo } from '../video/model/ivideo';
 import { VideoService } from '../video/services/video.service';
 
 @Component({
-    selector: 'app-clips-list',
-    templateUrl: './clips-list.component.html',
-    styleUrls: ['./clips-list.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-clips-list',
+  templateUrl: './clips-list.component.html',
+  styleUrls: ['./clips-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
-export class ClipsListComponent implements OnInit,OnDestroy{
-  Videos:IVideo[]=[];
-  constructor(private videoServices:VideoService) {
-  }
-
+export class ClipsListComponent implements OnInit, OnDestroy {
+  Videos: IVideo[] = [];
+  constructor(private videoServices: VideoService) {}
 
   ngOnInit(): void {
-      window.addEventListener('scroll',this.handleScrolling)
+    window.addEventListener('scroll', this.handleScrolling);
 
-    
-        this.videoServices.getVideos().subscribe(v=>{
-          this.Videos=v
-          console.log(this.Videos)
-        });
-    
+    this.videoServices.getVideos().subscribe((v) => {
+      this.Videos = v;
+      console.log(this.Videos);
+    });
   }
 
-  handleScrolling=()=>{
-    const {scrollTop,offsetHeight}= document.documentElement;
-    const {innerHeight} = window
-    const bottomOfWindo = Math.round(scrollTop) + innerHeight===offsetHeight
-    if(bottomOfWindo)
-      console.log('bootom')
-    
-  }
+  handleScrolling = () => {
+    const { scrollTop, offsetHeight } = document.documentElement;
+    const { innerHeight } = window;
+    const bottomOfWindo = Math.round(scrollTop) + innerHeight === offsetHeight;
+    if (bottomOfWindo) console.log('bootom');
+  };
   ngOnDestroy(): void {
-      
-    window.removeEventListener('scroll',this.handleScrolling)
+    window.removeEventListener('scroll', this.handleScrolling);
   }
-
-
 }

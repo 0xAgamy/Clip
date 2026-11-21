@@ -1,12 +1,16 @@
 <!-- Tabs -->
 <div class="mb-5 flex rounded-xl bg-black/20 p-1 ring-1 ring-white/5">
   @for (tab of tabs; track tab) {
-    <a href="#" (click)="selectTab(tab)"
+    <a
+      href="#"
+      (click)="selectTab(tab)"
       class="flex-1 rounded-lg px-4 py-2 text-center text-sm font-semibold transition-colors duration-200"
       [ngClass]="{
         'bg-indigo-500 text-white shadow': tab.active,
-        'text-gray-400 hover:text-white': !tab.active
-      }">{{tab.tabTitle}}</a>
+        'text-gray-400 hover:text-white': !tab.active,
+      }"
+      >{{ tab.tabTitle }}</a
+    >
   }
 </div>
 

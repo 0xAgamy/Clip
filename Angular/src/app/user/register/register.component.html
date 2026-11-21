@@ -1,100 +1,148 @@
-   @if (showAlert) {
-    <app-alert>
-      {{alertMsg}}
-     </app-alert>
-   }
+@if (showAlert) {
+  <app-alert>
+    {{ alertMsg }}
+  </app-alert>
+}
 
-   <!-- Registration Form -->
-   <form [formGroup]="registerForm" (ngSubmit)="Register()" class="max-h-[60vh] space-y-4 overflow-y-auto pr-1">
-    <!-- Name -->
-    <div>
-      <label class="form-label" for="register-name">Name</label>
-      <input id="register-name" formControlName="name" type="text" class="input-field"
-        placeholder="Enter Name" autocomplete="name" />
-      @if (registerForm.controls.name.touched) {
-        @if (registerForm.controls.name.errors?.['required']) {
-          <p class="form-error">The Name is Required</p>
-        }
+<!-- Registration Form -->
+<form
+  [formGroup]="registerForm"
+  (ngSubmit)="Register()"
+  class="max-h-[60vh] space-y-4 overflow-y-auto pr-1"
+>
+  <!-- Name -->
+  <div>
+    <label class="form-label" for="register-name">Name</label>
+    <input
+      id="register-name"
+      formControlName="name"
+      type="text"
+      class="input-field"
+      placeholder="Enter Name"
+      autocomplete="name"
+    />
+    @if (registerForm.controls.name.touched) {
+      @if (registerForm.controls.name.errors?.['required']) {
+        <p class="form-error">The Name is Required</p>
       }
-    </div>
+    }
+  </div>
 
-    <!-- Email -->
-    <div>
-      <label class="form-label" for="register-email">Email</label>
-      <input id="register-email" formControlName="email" type="email" class="input-field"
-        placeholder="you@example.com" autocomplete="email" />
-      @if (registerForm.controls.email.touched) {
-        @if (registerForm.controls.email.invalid && !registerForm.controls.email.errors?.['required']) {
-          <p class="form-error">The Email is invalid</p>
-        }
-        @if (registerForm.controls.email.errors?.['required']) {
-          <p class="form-error">The Email is Required</p>
-        }
+  <!-- Email -->
+  <div>
+    <label class="form-label" for="register-email">Email</label>
+    <input
+      id="register-email"
+      formControlName="email"
+      type="email"
+      class="input-field"
+      placeholder="you@example.com"
+      autocomplete="email"
+    />
+    @if (registerForm.controls.email.touched) {
+      @if (
+        registerForm.controls.email.invalid && !registerForm.controls.email.errors?.['required']
+      ) {
+        <p class="form-error">The Email is invalid</p>
       }
-    </div>
-
-    <!-- Age -->
-    <div>
-      <label class="form-label" for="register-age">Age</label>
-      <input id="register-age" formControlName="age" type="number" class="input-field" placeholder="Enter Age" />
-      @if (Age.touched) {
-        @if (Age.errors?.['required']) {
-          <div class="form-error">The Age is Required</div>
-        }
-        @if (Age.errors?.['min']) {
-          <div class="form-error">The value is too low</div>
-        }
-        @if (Age.errors?.['max']) {
-          <div class="form-error">You're a very old man , The Value is too high</div>
-        }
+      @if (registerForm.controls.email.errors?.['required']) {
+        <p class="form-error">The Email is Required</p>
       }
-    </div>
+    }
+  </div>
 
-    <!-- Password -->
-    <div>
-      <label class="form-label" for="register-password">Password</label>
-      <input id="register-password" formControlName="password" type="password" class="input-field"
-        placeholder="Password" autocomplete="new-password" />
-      @if (registerForm.controls.password.touched) {
-        <div class="form-error">
-          @if (Password.invalid && !Password.errors?.['required']) {
-            <small>at least 8 characters, must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number</small>
-          }
-          @if (registerForm.controls.password.errors?.['required']) {
-            <small>The Password is Required</small>
-          }
-        </div>
+  <!-- Age -->
+  <div>
+    <label class="form-label" for="register-age">Age</label>
+    <input
+      id="register-age"
+      formControlName="age"
+      type="number"
+      class="input-field"
+      placeholder="Enter Age"
+    />
+    @if (Age.touched) {
+      @if (Age.errors?.['required']) {
+        <div class="form-error">The Age is Required</div>
       }
-    </div>
-
-    <!-- Confirm Password -->
-    <div>
-      <label class="form-label" for="register-confirm">Confirm Password</label>
-      <input id="register-confirm" type="password" class="input-field" placeholder="Confirm Password"
-        formControlName="confirm_password" autocomplete="new-password" />
-      @if (confirmPassword.touched) {
-        @if (Password.value !== confirmPassword.value) {
-          <div class="form-error">Confirm Password doesn't match Password</div>
-        }
+      @if (Age.errors?.['min']) {
+        <div class="form-error">The value is too low</div>
       }
-    </div>
-
-    <!-- Phone Number -->
-    <div>
-      <label class="form-label" for="register-phone">Phone Number</label>
-      <input id="register-phone" type="text" class="input-field" placeholder="Enter Phone Number"
-        formControlName="phoneNumber" autocomplete="tel" />
-      @if (registerForm.controls.phoneNumber.touched) {
-        @if (registerForm.controls.phoneNumber.invalid && !registerForm.controls.phoneNumber.errors?.['required']) {
-          <p class="form-error">The Phone Number Is Invalid</p>
-        }
-        @if (registerForm.controls.phoneNumber.errors?.['required']) {
-          <p class="form-error">The Phone Number Is Required</p>
-        }
+      @if (Age.errors?.['max']) {
+        <div class="form-error">You're a very old man , The Value is too high</div>
       }
-    </div>
+    }
+  </div>
 
-    <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary w-full">
-      Create account
-    </button>
-  </form>
+  <!-- Password -->
+  <div>
+    <label class="form-label" for="register-password">Password</label>
+    <input
+      id="register-password"
+      formControlName="password"
+      type="password"
+      class="input-field"
+      placeholder="Password"
+      autocomplete="new-password"
+    />
+    @if (registerForm.controls.password.touched) {
+      <div class="form-error">
+        @if (Password.invalid && !Password.errors?.['required']) {
+          <small
+            >at least 8 characters, must contain at least 1 uppercase letter, 1 lowercase letter,
+            and 1 number</small
+          >
+        }
+        @if (registerForm.controls.password.errors?.['required']) {
+          <small>The Password is Required</small>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Confirm Password -->
+  <div>
+    <label class="form-label" for="register-confirm">Confirm Password</label>
+    <input
+      id="register-confirm"
+      type="password"
+      class="input-field"
+      placeholder="Confirm Password"
+      formControlName="confirm_password"
+      autocomplete="new-password"
+    />
+    @if (confirmPassword.touched) {
+      @if (Password.value !== confirmPassword.value) {
+        <div class="form-error">Confirm Password doesn't match Password</div>
+      }
+    }
+  </div>
+
+  <!-- Phone Number -->
+  <div>
+    <label class="form-label" for="register-phone">Phone Number</label>
+    <input
+      id="register-phone"
+      type="text"
+      class="input-field"
+      placeholder="Enter Phone Number"
+      formControlName="phoneNumber"
+      autocomplete="tel"
+    />
+    @if (registerForm.controls.phoneNumber.touched) {
+      @if (
+        registerForm.controls.phoneNumber.invalid &&
+        !registerForm.controls.phoneNumber.errors?.['required']
+      ) {
+        <p class="form-error">The Phone Number Is Invalid</p>
+      }
+      @if (registerForm.controls.phoneNumber.errors?.['required']) {
+        <p class="form-error">The Phone Number Is Required</p>
+      }
+    }
+  </div>
+
+  <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary w-full">
+    Create account
+  </button>
+</form>

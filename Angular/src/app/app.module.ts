@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { provideHttpClient, withInterceptors, } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { UserModule } from './user/user.module';
 import { HomeComponent } from './home/home.component';
@@ -13,29 +13,21 @@ import { VideoModule } from './video/video.module';
 import { ClipComponent } from './clip/clip.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ClipsListComponent } from './clips-list/clips-list.component';
-import {authInterceptor} from './shared/interceptors/auth.interceptor'
-import {errorInterceptor} from './shared/interceptors/error.interceptor'
+import { authInterceptor } from './shared/interceptors/auth.interceptor';
+import { errorInterceptor } from './shared/interceptors/error.interceptor';
 
-
-@NgModule({ declarations: [
-        AppComponent,
-        NavComponent,
-        HomeComponent,
-        AboutComponent,
-        ClipComponent,
-        NotFoundComponent,
-        ClipsListComponent,
-        
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        VideoModule,
-        AppRoutingModule,
-        UserModule], providers:
-         [provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
-
-
-
-         ]
-        
-    })
-export class AppModule { }
+@NgModule({
+  declarations: [
+    AppComponent,
+    NavComponent,
+    HomeComponent,
+    AboutComponent,
+    ClipComponent,
+    NotFoundComponent,
+    ClipsListComponent,
+  ],
+  bootstrap: [AppComponent],
+  imports: [BrowserModule, VideoModule, AppRoutingModule, UserModule],
+  providers: [provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))],
+})
+export class AppModule {}

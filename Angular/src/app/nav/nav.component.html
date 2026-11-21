@@ -2,8 +2,14 @@
 <header id="header" class="sticky top-0 z-40 border-b border-white/5 bg-[#161d31]/90 backdrop-blur">
   <nav class="page-container flex flex-wrap items-center gap-x-4 gap-y-2 py-3 sm:py-4">
     <!-- App Name -->
-    <a routerLink="/" class="flex items-center gap-2 text-2xl font-bold uppercase tracking-[0.2em] text-white">
-      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-sm font-black tracking-normal text-white">C</span>
+    <a
+      routerLink="/"
+      class="flex items-center gap-2 text-2xl font-bold uppercase tracking-[0.2em] text-white"
+    >
+      <span
+        class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-sm font-black tracking-normal text-white"
+        >C</span
+      >
       Clip
     </a>
 
@@ -16,7 +22,13 @@
           </li>
         } @else {
           <li>
-            <a class="nav-link" routerLink="/manage" routerLinkActive="nav-link-active" [queryParams]="{sort:'1'}">Manage</a>
+            <a
+              class="nav-link"
+              routerLink="/manage"
+              routerLinkActive="nav-link-active"
+              [queryParams]="{ sort: '1' }"
+              >Manage</a
+            >
           </li>
           <li>
             <a class="nav-link" routerLink="/upload" routerLinkActive="nav-link-active">Upload</a>
@@ -33,8 +45,12 @@
       <!-- Account / Language -->
       <ul class="ml-auto flex items-center gap-2">
         @if (currentUser) {
-          <li class="hidden items-center gap-2 rounded-full bg-white/5 py-1 pl-1 pr-3 text-sm text-gray-300 sm:flex">
-            <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold uppercase text-white">
+          <li
+            class="hidden items-center gap-2 rounded-full bg-white/5 py-1 pl-1 pr-3 text-sm text-gray-300 sm:flex"
+          >
+            <span
+              class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold uppercase text-white"
+            >
               {{ currentUser.name.charAt(0) }}
             </span>
             Welcome, {{ currentUser.name }}
@@ -48,7 +64,11 @@
         }
 
         <li>
-          <a href="#" class="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-gray-400 transition hover:bg-white/5 hover:text-white" title="Language">
+          <a
+            href="#"
+            class="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-gray-400 transition hover:bg-white/5 hover:text-white"
+            title="Language"
+          >
             <span class="material-icons text-base">language</span>
             <span class="hidden sm:inline">EN</span>
           </a>

@@ -13,21 +13,16 @@ import { EventBlockerDirective } from './directives/event-blocker.directive';
     TabsContainerComponent,
     TabComponent,
     AlertComponent,
-    EventBlockerDirective
+    EventBlockerDirective,
   ],
-  imports: [
-    CommonModule
-
-  ],
-  exports:[
+  imports: [CommonModule],
+  exports: [
     ModalComponent,
     TabsContainerComponent,
     TabComponent,
     AlertComponent,
     EventBlockerDirective,
   ],
-  providers:[
-    ModalService,
-  ]
+  providers: [ModalService],
 })
-export class SharedModule { }
+export class SharedModule {}

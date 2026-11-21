@@ -9,10 +9,10 @@ type UploadState = 'idle' | 'selected' | 'uploading' | 'done' | 'error';
 type AlertColor = 'info' | 'success' | 'error';
 
 @Component({
-    selector: 'app-upload',
-    templateUrl: './upload.component.html',
-    styleUrls: ['./upload.component.css'],
-    standalone: false
+  selector: 'app-upload',
+  templateUrl: './upload.component.html',
+  styleUrls: ['./upload.component.css'],
+  standalone: false,
 })
 export class UploadComponent implements OnDestroy {
   // upload flow state
@@ -43,7 +43,10 @@ export class UploadComponent implements OnDestroy {
 
   @ViewChild('videoPlayer') videoPlayer?: ElementRef<HTMLVideoElement>;
 
-  constructor(private videoService: VideoService, private router: Router) {}
+  constructor(
+    private videoService: VideoService,
+    private router: Router,
+  ) {}
 
   // ---- Step 1: select / drop the video -------------------------------------
 
@@ -130,7 +133,8 @@ export class UploadComponent implements OnDestroy {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, 'image/jpeg', 0.8));
+      canvas.toBlob(resolve, 'image/jpeg', 0.8),
+    );
     if (!blob) return null;
 
     return new File([blob], 'thumbnail.jpg', { type: 'image/jpeg' });
@@ -180,9 +184,8 @@ export class UploadComponent implements OnDestroy {
       error: (err) => {
         this.uploadState = 'error';
         this.alertColor = 'error';
-        this.alertMessage = typeof err?.error === 'string'
-          ? err.error
-          : 'Upload failed. Please try again.';
+        this.alertMessage =
+          typeof err?.error === 'string' ? err.error : 'Upload failed. Please try again.';
         this.progress = 0;
       },
     });

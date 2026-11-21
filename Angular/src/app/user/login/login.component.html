@@ -2,22 +2,34 @@
 <form [formGroup]="loginForm" (submit)="login()" class="space-y-4">
   @if (showAlert) {
     <app-alert>
-      {{alertMsg}}
+      {{ alertMsg }}
     </app-alert>
   }
 
   <!-- Email -->
   <div>
     <label class="form-label" for="login-email">Email</label>
-    <input id="login-email" type="email" class="input-field" placeholder="you@example.com"
-      formControlName="email" autocomplete="email" />
+    <input
+      id="login-email"
+      type="email"
+      class="input-field"
+      placeholder="you@example.com"
+      formControlName="email"
+      autocomplete="email"
+    />
   </div>
 
   <!-- Password -->
   <div>
     <label class="form-label" for="login-password">Password</label>
-    <input id="login-password" type="password" class="input-field" placeholder="Your password"
-      formControlName="password" autocomplete="current-password" />
+    <input
+      id="login-password"
+      type="password"
+      class="input-field"
+      placeholder="Your password"
+      formControlName="password"
+      autocomplete="current-password"
+    />
   </div>
 
   <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary w-full">

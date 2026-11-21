@@ -1,25 +1,33 @@
-<div class="fixed inset-0 z-50 overflow-y-auto" id="modal" [ngClass]="{hidden: !modal.isModelOpen(MOdalId)}">
-    <div class="flex min-h-screen items-center justify-center p-4">
-      <!-- Modal BG Overlay -->
-      <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" (click)="closeModal()"></div>
+<div
+  class="fixed inset-0 z-50 overflow-y-auto"
+  id="modal"
+  [ngClass]="{ hidden: !modal.isModelOpen(MOdalId) }"
+>
+  <div class="flex min-h-screen items-center justify-center p-4">
+    <!-- Modal BG Overlay -->
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" (click)="closeModal()"></div>
 
-      <div class="relative w-full max-w-lg rounded-2xl bg-[#283046] text-left shadow-2xl ring-1 ring-white/10">
+    <div
+      class="relative w-full max-w-lg rounded-2xl bg-[#283046] text-left shadow-2xl ring-1 ring-white/10"
+    >
+      <!-- Header -->
+      <div class="flex items-center justify-between gap-4 border-b border-white/5 px-6 py-4">
+        <ng-content select="[heading]"></ng-content>
+        <!-- Modal Close Button -->
+        <button
+          type="button"
+          class="modal-close flex h-8 w-8 flex-none items-center justify-center rounded-lg text-gray-400 transition hover:bg-white/10 hover:text-white"
+          (click)="closeModal()"
+          aria-label="Close"
+        >
+          &#x2715;
+        </button>
+      </div>
 
-        <!-- Header -->
-        <div class="flex items-center justify-between gap-4 border-b border-white/5 px-6 py-4">
-          <ng-content select="[heading]"></ng-content>
-          <!-- Modal Close Button -->
-          <button type="button"
-            class="modal-close flex h-8 w-8 flex-none items-center justify-center rounded-lg text-gray-400 transition hover:bg-white/10 hover:text-white"
-            (click)="closeModal()" aria-label="Close">
-            &#x2715;
-          </button>
-        </div>
-
-        <!-- Content -->
-        <div class="px-6 py-5">
-          <ng-content></ng-content>
-        </div>
+      <!-- Content -->
+      <div class="px-6 py-5">
+        <ng-content></ng-content>
       </div>
     </div>
   </div>
+</div>

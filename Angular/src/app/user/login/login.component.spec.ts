@@ -12,11 +12,10 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ],
-      providers: [ provideHttpClient(), provideHttpClientTesting(), provideRouter([]) ],
-    })
-    .compileComponents();
+      declarations: [LoginComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;

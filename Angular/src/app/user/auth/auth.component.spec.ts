@@ -12,11 +12,10 @@ describe('AuthComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AuthComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ],
-      providers: [ provideHttpClient(), provideHttpClientTesting(), provideRouter([]) ],
-    })
-    .compileComponents();
+      declarations: [AuthComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AuthComponent);
     component = fixture.componentInstance;
