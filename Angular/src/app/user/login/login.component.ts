@@ -12,7 +12,7 @@ import { UserServices } from '../services/user-services.service';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  Authenticatd = false;
+  authenticated = false;
   showAlert = false;
   alertMsg = ' You will be in, in a second';
   @Output() alertColor: string = 'blue';

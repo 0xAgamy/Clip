@@ -39,7 +39,7 @@ export class VideoService {
     return this.httpclient.delete(`${this.baseUrl}/api/Video/${id}`);
   }
 
-  RecommencClips(id: number): Observable<IVideo[]> {
+  getRecommendedClips(id: number): Observable<IVideo[]> {
     return this.httpclient.get<IVideo[]>(`${this.baseUrl}/api/Video/recommend/${id}`);
   }
   EditClip(id: number, model: IVideoVm): Observable<IVideo> {

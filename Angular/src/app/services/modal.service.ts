@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 interface IModal {
   id: string;
-  visable: boolean;
+  visible: boolean;
 }
 @Injectable({
   providedIn: 'root',
@@ -13,19 +13,19 @@ export class ModalService {
   register(id: string) {
     this.modals.push({
       id,
-      visable: false,
+      visible: false,
     });
   }
   unRegister(id: string) {
     this.modals = this.modals.filter((ele) => ele.id !== id);
   }
-  isModelOpen(id: string): boolean {
-    return !!this.modals.find((ele) => ele.id == id)?.visable;
+  isOpen(id: string): boolean {
+    return !!this.modals.find((ele) => ele.id == id)?.visible;
   }
-  toggleModel(id: string) {
+  toggle(id: string) {
     const modal = this.modals.find((ele) => ele.id == id);
     if (modal) {
-      modal.visable = !modal.visable;
+      modal.visible = !modal.visible;
     }
   }
 }

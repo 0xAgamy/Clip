@@ -15,7 +15,7 @@ export class RegisterComponent {
   showAlert = false;
   alertMsg = 'Please Wait ! Your Acount is Begin Created';
   alertColor = 'info';
-  ErorrMesg = [];
+  errorMessages = [];
   constructor(private userServices: UserServices) {}
   registerForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),

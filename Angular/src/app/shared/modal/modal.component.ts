@@ -16,7 +16,7 @@ import { ModalService } from '../../services/modal.service';
   standalone: false,
 })
 export class ModalComponent implements OnInit, OnDestroy {
-  @Input() MOdalId = '';
+  @Input() modalId = '';
   constructor(
     public modal: ModalService,
     public eleref: ElementRef,
@@ -28,6 +28,6 @@ export class ModalComponent implements OnInit, OnDestroy {
     document.body.removeChild(this.eleref.nativeElement);
   }
   closeModal() {
-    this.modal.toggleModel(this.MOdalId);
+    this.modal.toggle(this.modalId);
   }
 }

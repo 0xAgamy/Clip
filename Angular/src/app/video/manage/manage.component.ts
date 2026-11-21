@@ -13,7 +13,7 @@ import { VideoService } from '../services/video.service';
 })
 export class ManageComponent implements OnInit, OnDestroy {
   userId: string = '';
-  private subescripe!: Subscription;
+  private subscription!: Subscription;
   UserVideos: IVideo[] = [];
 
   // delete flow
@@ -31,7 +31,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.loadVideos();
   }
   loadVideos() {
-    this.subescripe = this.videoServices.getUserClips().subscribe({
+    this.subscription = this.videoServices.getUserClips().subscribe({
       next: (video) => {
         this.UserVideos = video;
       },
@@ -43,13 +43,13 @@ export class ManageComponent implements OnInit, OnDestroy {
   RequestDelete(video: IVideo) {
     this.videoToDelete = video;
     this.deleteError = '';
-    this._modalService.toggleModel('delete-video');
+    this._modalService.toggle('delete-video');
   }
   CancelDelete() {
     this.videoToDelete = null;
     this.deleteError = '';
     this.isDeleting = false;
-    this._modalService.toggleModel('delete-video');
+    this._modalService.toggle('delete-video');
   }
   ConfirmDelete() {
     if (!this.videoToDelete || this.isDeleting) {
@@ -67,7 +67,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.isDeleting = false;
         this.videoToDelete = null;
         this.successMessage = `"${title}" was deleted.`;
-        this._modalService.toggleModel('delete-video');
+        this._modalService.toggle('delete-video');
       },
       error: () => {
         this.isDeleting = false;
@@ -76,7 +76,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.subescripe.unsubscribe();
+    this.subscription.unsubscribe();
     this._modalService.unRegister('delete-video');
   }
 }

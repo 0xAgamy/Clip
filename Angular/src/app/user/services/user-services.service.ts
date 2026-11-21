@@ -16,7 +16,7 @@ export class UserServices {
   private redirect = false;
   private userSource = new ReplaySubject<IUser | null>(1);
   public user$ = this.userSource.asObservable();
-  public userwithdelay$ = this.user$.pipe(delay(1000));
+  public userWithDelay$ = this.user$.pipe(delay(1000));
   userName: string = '';
   constructor(
     private httpClient: HttpClient,
