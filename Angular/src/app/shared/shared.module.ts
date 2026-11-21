@@ -5,6 +5,7 @@ import { ModalService } from '../services/modal.service';
 import { TabsContainerComponent } from './tabs-container/tabs-container.component';
 import { TabComponent } from './tab/tab.component';
 import { AlertComponent } from './alert/alert.component';
+import { FormAlertComponent } from './alert/form-alert.component';
 import { EventBlockerDirective } from './directives/event-blocker.directive';
 
 @NgModule({
@@ -13,6 +14,7 @@ import { EventBlockerDirective } from './directives/event-blocker.directive';
     TabsContainerComponent,
     TabComponent,
     AlertComponent,
+    FormAlertComponent,
     EventBlockerDirective,
   ],
   imports: [CommonModule],
@@ -21,6 +23,7 @@ import { EventBlockerDirective } from './directives/event-blocker.directive';
     TabsContainerComponent,
     TabComponent,
     AlertComponent,
+    FormAlertComponent,
     EventBlockerDirective,
   ],
   providers: [ModalService],

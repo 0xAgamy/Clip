@@ -31,13 +31,9 @@
     </ol>
 
     <div class="surface-card p-6">
-      @if (showAlert) {
-        <div class="mb-5">
-          <app-alert [alertColor]="alertColor">
-            {{ alertMessage }}
-          </app-alert>
-        </div>
-      }
+      <div class="mb-5">
+        <app-form-alert />
+      </div>
 
       <!-- Step 1: Drop your file -->
       @if (!nextStep) {

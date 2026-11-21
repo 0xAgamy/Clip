@@ -1,5 +1,6 @@
-import { Component, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AlertService } from '../../shared/alert/alert.service';
 import { ILogin } from '../models/login';
 import { UserServices } from '../services/user-services.service';
 
@@ -12,11 +13,11 @@ import { UserServices } from '../services/user-services.service';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  authenticated = false;
-  showAlert = false;
-  alertMsg = ' You will be in, in a second';
-  @Output() alertColor: string = 'blue';
-  constructor(private UserServices: UserServices) {
+
+  constructor(
+    private userServices: UserServices,
+    private alert: AlertService,
+  ) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
@@ -31,12 +32,16 @@ export class LoginComponent {
   }
 
   login() {
-    const loginmodal: ILogin = this.loginForm.value;
-
-    if (this.loginForm.valid) {
-      this.UserServices.Login(loginmodal).subscribe(() => {});
+    if (this.loginForm.invalid) {
+      this.alert.error('Enter your email and password.');
+      return;
     }
 
-    this.showAlert = true;
+    const loginmodal: ILogin = this.loginForm.value;
+    this.alert.info('You will be in, in a second...');
+    this.userServices.Login(loginmodal).subscribe({
+      next: () => this.alert.success('You are logged in.'),
+      error: () => this.alert.error('Invalid email or password.'),
+    });
   }
 }

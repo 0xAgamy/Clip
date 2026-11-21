@@ -1,21 +1,6 @@
 <section class="page-container py-8">
-  <!-- Deleted feedback -->
-  @if (successMessage) {
-    <div
-      class="mb-6 flex items-center gap-3 rounded-xl bg-green-600/90 px-4 py-3 text-sm text-white shadow-lg ring-1 ring-inset ring-white/10"
-    >
-      <span class="material-icons text-base">check_circle</span>
-      <span class="flex-1">{{ successMessage }}</span>
-      <button
-        type="button"
-        (click)="successMessage = ''"
-        class="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 transition hover:bg-white/10 hover:text-white"
-        aria-label="Dismiss"
-      >
-        &#x2715;
-      </button>
-    </div>
-  }
+  <!-- Feedback -->
+  <app-form-alert />
 
   <!-- Top Bar -->
   <div

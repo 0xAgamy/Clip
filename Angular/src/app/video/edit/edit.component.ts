@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { AlertService } from '../../shared/alert/alert.service';
 import { IVideo } from '../model/ivideo';
 import { VideoService } from '../services/video.service';
 import { IVideoVm } from '../model/ivideo-vm';
@@ -15,11 +16,6 @@ import { IVideoVm } from '../model/ivideo-vm';
 export class EditComponent implements OnInit {
   Video!: IVideo;
   id: string = '';
-  //
-
-  showAlert = false;
-  alertColor: 'info' | 'success' | 'error' = 'info';
-  alertMesg = '';
   inSubmission = false;
 
   title = new FormControl('', [Validators.required, Validators.minLength(3)]);
@@ -29,6 +25,7 @@ export class EditComponent implements OnInit {
   constructor(
     private VideoServices: VideoService,
     private activeRouter: ActivatedRoute,
+    private alert: AlertService,
   ) {}
 
   ngOnInit() {
@@ -56,9 +53,7 @@ export class EditComponent implements OnInit {
     const ID = +this.id;
 
     this.inSubmission = true;
-    this.showAlert = true;
-    this.alertColor = 'info';
-    this.alertMesg = 'Saving your changes...';
+    this.alert.info('Saving your changes...');
 
     this.VideoServices.EditClip(ID, editedVideo).subscribe({
       next: (edited) => {
@@ -68,13 +63,11 @@ export class EditComponent implements OnInit {
           this.videoForm.patchValue({ title: edited.title });
           this.videoForm.markAsPristine();
         }
-        this.alertColor = 'success';
-        this.alertMesg = 'Your clip was updated successfully.';
+        this.alert.success('Your clip was updated successfully.');
       },
       error: () => {
         this.inSubmission = false;
-        this.alertColor = 'error';
-        this.alertMesg = 'Could not update this clip. Please try again.';
+        this.alert.error('Could not update this clip. Please try again.');
       },
     });
   }

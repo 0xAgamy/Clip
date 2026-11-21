@@ -1,10 +1,6 @@
 <!-- Login Form -->
 <form [formGroup]="loginForm" (submit)="login()" class="space-y-4">
-  @if (showAlert) {
-    <app-alert>
-      {{ alertMsg }}
-    </app-alert>
-  }
+  <app-form-alert />
 
   <!-- Email -->
   <div>

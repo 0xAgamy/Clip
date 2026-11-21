@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AlertService } from '../../shared/alert/alert.service';
 import { ModalService } from '../../services/modal.service';
 import { IVideo } from '../model/ivideo';
 import { VideoService } from '../services/video.service';
@@ -20,11 +21,11 @@ export class ManageComponent implements OnInit, OnDestroy {
   videoToDelete: IVideo | null = null;
   isDeleting = false;
   deleteError = '';
-  successMessage = '';
 
   constructor(
     private videoServices: VideoService,
     private _modalService: ModalService,
+    private alert: AlertService,
   ) {}
   ngOnInit() {
     this._modalService.register('delete-video');
@@ -66,7 +67,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.UserVideos = this.UserVideos.filter((video) => video.id !== id);
         this.isDeleting = false;
         this.videoToDelete = null;
-        this.successMessage = `"${title}" was deleted.`;
+        this.alert.success(`"${title}" was deleted.`);
         this._modalService.toggle('delete-video');
       },
       error: () => {

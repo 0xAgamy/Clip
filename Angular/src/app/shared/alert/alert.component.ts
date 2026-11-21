@@ -1,4 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { AlertColor } from './alert.service';
 
 @Component({
   selector: 'app-alert',
@@ -13,7 +14,7 @@ export class AlertComponent {
     success: 'bg-green-600',
     error: 'bg-red-600',
   } as const;
-  @Input() alertColor: keyof typeof this.COLOR_CLASSES = 'info';
+  @Input() alertColor: AlertColor = 'info';
 
   get bgcolor(): string {
     return this.COLOR_CLASSES[this.alertColor] ?? this.COLOR_CLASSES.info;

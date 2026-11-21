@@ -2,11 +2,11 @@ import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AlertService } from '../../shared/alert/alert.service';
 import { VideoService } from '../services/video.service';
 import { IVideoVm } from '../model/ivideo-vm';
 
 type UploadState = 'idle' | 'selected' | 'uploading' | 'done' | 'error';
-type AlertColor = 'info' | 'success' | 'error';
 
 @Component({
   selector: 'app-upload',
@@ -18,11 +18,6 @@ export class UploadComponent implements OnDestroy {
   // upload flow state
   uploadState: UploadState = 'idle';
   progress = 0;
-
-  // feedback
-  showAlert = false;
-  alertColor: AlertColor = 'info';
-  alertMessage = '';
 
   // step 1 (file selection)
   isDragOver = false;
@@ -46,6 +41,7 @@ export class UploadComponent implements OnDestroy {
   constructor(
     private videoService: VideoService,
     private router: Router,
+    private alert: AlertService,
   ) {}
 
   // ---- Step 1: select / drop the video -------------------------------------
@@ -64,12 +60,9 @@ export class UploadComponent implements OnDestroy {
     if (!file) return;
 
     if (file.type !== 'video/mp4') {
-      this.showAlert = true;
-      this.alertColor = 'error';
-      this.alertMessage = 'Only MP4 videos are supported.';
+      this.alert.error('Only MP4 videos are supported.');
       return;
     }
-    this.showAlert = false;
 
     this.resetPreview();
     this.videoFile = file;
@@ -110,9 +103,7 @@ export class UploadComponent implements OnDestroy {
       this.thumbnailPreviewUrl = this.thumbnailObjectUrl;
     } catch (err) {
       console.error('Thumbnail capture failed', err);
-      this.showAlert = true;
-      this.alertColor = 'error';
-      this.alertMessage = 'Could not capture a thumbnail from this video.';
+      this.alert.error('Could not capture a thumbnail from this video.');
     }
   }
 
@@ -162,9 +153,7 @@ export class UploadComponent implements OnDestroy {
       title: this.title.value ?? '',
     } as IVideoVm;
 
-    this.showAlert = true;
-    this.alertColor = 'info';
-    this.alertMessage = 'Please wait — your clip is being uploaded.';
+    this.alert.info('Please wait — your clip is being uploaded.');
     this.uploadState = 'uploading';
     this.progress = 0;
 
@@ -174,8 +163,7 @@ export class UploadComponent implements OnDestroy {
           this.progress = Math.round((100 * event.loaded) / event.total);
         } else if (event.type === HttpEventType.Response) {
           this.uploadState = 'done';
-          this.alertColor = 'success';
-          this.alertMessage = 'Upload complete! Redirecting...';
+          this.alert.success('Upload complete! Redirecting...');
           if (event.body?.id != null) {
             this.router.navigate(['/clip', event.body.id]);
           }
@@ -183,9 +171,9 @@ export class UploadComponent implements OnDestroy {
       },
       error: (err) => {
         this.uploadState = 'error';
-        this.alertColor = 'error';
-        this.alertMessage =
-          typeof err?.error === 'string' ? err.error : 'Upload failed. Please try again.';
+        this.alert.error(
+          typeof err?.error === 'string' ? err.error : 'Upload failed. Please try again.',
+        );
         this.progress = 0;
       },
     });

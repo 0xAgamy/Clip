@@ -41,13 +41,9 @@
             }
           </div>
 
-          @if (showAlert) {
-            <div class="mt-4">
-              <app-alert [alertColor]="alertColor">
-                {{ alertMesg }}
-              </app-alert>
-            </div>
-          }
+          <div class="mt-4">
+            <app-form-alert />
+          </div>
 
           <div class="mt-8 flex justify-end">
             <button

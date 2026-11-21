@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AlertService } from '../../shared/alert/alert.service';
 import { IRegister } from '../models/register';
 import { UserServices } from '../services/user-services.service';
 
@@ -10,13 +11,12 @@ import { UserServices } from '../services/user-services.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-// min Validator for Nubmers  , and minLength validator for strings
 export class RegisterComponent {
-  showAlert = false;
-  alertMsg = 'Please Wait ! Your Acount is Begin Created';
-  alertColor = 'info';
-  errorMessages = [];
-  constructor(private userServices: UserServices) {}
+  constructor(
+    private userServices: UserServices,
+    private alert: AlertService,
+  ) {}
+
   registerForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('', [Validators.email, Validators.required]),
@@ -57,9 +57,11 @@ export class RegisterComponent {
   }
 
   Register() {
-    this.showAlert = true;
-    this.alertMsg = 'Please Wait ! Your Acount is Begin Created';
-    this.alertColor = 'blue';
+    if (this.registerForm.invalid) {
+      this.alert.error('Please fill in all required fields.');
+      return;
+    }
+
     const user = {
       userName: this.registerForm.value.name,
       email: this.registerForm.value.email,
@@ -67,11 +69,13 @@ export class RegisterComponent {
       phoneNumber: this.registerForm.value.phoneNumber,
     } as IRegister;
 
-    if (this.registerForm.valid) {
-      this.userServices.register(user).subscribe({
-        next: () => {},
-        error: () => {},
-      });
-    }
+    this.alert.info('Please wait, your account is being created...');
+    this.userServices.register(user).subscribe({
+      next: () => {
+        this.alert.success('Account created! You can log in now.');
+        this.registerForm.reset();
+      },
+      error: () => this.alert.error('Could not create the account. Please try again.'),
+    });
   }
 }
