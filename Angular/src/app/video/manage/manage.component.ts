@@ -11,6 +11,8 @@ import { VideoService } from '../services/video.service';
   styleUrls: ['./manage.component.css'],
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
+  // Per-component alert state so a message never leaks into another page.
+  providers: [AlertService],
 })
 export class ManageComponent implements OnInit, OnDestroy {
   userId: string = '';

@@ -10,6 +10,8 @@ import { UserServices } from '../services/user-services.service';
   styleUrls: ['./login.component.css'],
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
+  // Per-component alert state so a message never leaks into another page.
+  providers: [AlertService],
 })
 export class LoginComponent {
   loginForm: FormGroup;

@@ -13,6 +13,8 @@ type UploadState = 'idle' | 'selected' | 'uploading' | 'done' | 'error';
   templateUrl: './upload.component.html',
   styleUrls: ['./upload.component.css'],
   standalone: false,
+  // Per-component alert state so a message never leaks into another page.
+  providers: [AlertService],
 })
 export class UploadComponent implements OnDestroy {
   // upload flow state

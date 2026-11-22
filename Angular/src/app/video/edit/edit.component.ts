@@ -12,6 +12,8 @@ import { IVideoVm } from '../model/ivideo-vm';
   styleUrls: ['./edit.component.css'],
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
+  // Per-component alert state so a message never leaks into another page.
+  providers: [AlertService],
 })
 export class EditComponent implements OnInit {
   Video!: IVideo;
