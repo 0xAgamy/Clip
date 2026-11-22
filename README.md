@@ -23,19 +23,28 @@ The project contains an Angular 22 frontend and an ASP.NET Core 10 Web API backe
 | Database | PostgreSQL 16  |
 | Authentication | ASP.NET Core Identity + JWT Bearer |
 | API docs | Swashbuckle / Swagger |
-| Frontend | Angular 22, TypeScript 6, Tailwind CSS, Video.js |
-| Local database | Docker Compose |
+| Frontend | Angular 22, TypeScript 6, Tailwind CSS |
+| Object storage | MinIO (S3-compatible API) |
+| Local infrastructure | Docker Compose |
 
 
 ## Getting Started
 
-### 1. Start PostgreSQL
+### 1. Start PostgreSQL and MinIO
 
 From the repository root:
 
 ```bash
 docker compose -f API/docker-compose.yaml up --build
 ```
+
+This starts:
+
+- PostgreSQL on `localhost:5432` (application data)
+- MinIO on `localhost:9000` (S3 API) with its console on `localhost:9001`
+
+Uploaded videos and thumbnails are stored in MinIO and served through presigned URLs,
+so MinIO must be running for thumbnails and playback to work.
 
 To stop it:
 
@@ -73,10 +82,36 @@ In a separate terminal:
 ```bash
 cd Angular
 npm install
-ng serve
+npm start
 ```
 
-The frontend runs at `http://localhost:4200`. Its API calls are currently hard-coded to `https://localhost:7120`, so the API must be running on that URL with a trusted development certificate.
+The frontend runs at `http://localhost:4200`.
+
+In development the frontend calls `/api/...` on its own origin; `Angular/proxy.conf.json`
+forwards those requests to `https://localhost:7120`. Because the browser only talks to
+`localhost:4200`, no certificate prompt appears for the API. The proxy is enabled by the
+`serve` target, so always start the app with `npm start` / `ng serve`.
+
+If you also want to call the API directly (Swagger, curl), trust the ASP.NET development
+certificate once:
+
+```bash
+dotnet dev-certs https --trust
+```
+
+### 5. Frontend development scripts
+
+```bash
+cd Angular
+
+npm start     # dev server with the /api proxy on http://localhost:4200
+npm run build # production build
+npm run lint  # ESLint (angular-eslint + typescript-eslint)
+npm run format # Prettier for src/**/*.{ts,html,css}
+```
+
+`prefer-standalone`, `prefer-inject` and a few template accessibility rules are reported as
+warnings on purpose; they are scheduled for a separate migration.
 
 ## Database and Migrations
 
