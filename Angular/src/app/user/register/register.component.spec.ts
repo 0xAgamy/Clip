@@ -12,11 +12,10 @@ describe('RegisterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RegisterComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ],
-      providers: [ provideHttpClient(), provideHttpClientTesting(), provideRouter([]) ],
-    })
-    .compileComponents();
+      declarations: [RegisterComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;

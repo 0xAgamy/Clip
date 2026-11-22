@@ -2,27 +2,24 @@ import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AlertService } from '../../shared/alert/alert.service';
 import { VideoService } from '../services/video.service';
 import { IVideoVm } from '../model/ivideo-vm';
 
 type UploadState = 'idle' | 'selected' | 'uploading' | 'done' | 'error';
-type AlertColor = 'info' | 'success' | 'error';
 
 @Component({
-    selector: 'app-upload',
-    templateUrl: './upload.component.html',
-    styleUrls: ['./upload.component.css'],
-    standalone: false
+  selector: 'app-upload',
+  templateUrl: './upload.component.html',
+  styleUrls: ['./upload.component.css'],
+  standalone: false,
+  // Per-component alert state so a message never leaks into another page.
+  providers: [AlertService],
 })
 export class UploadComponent implements OnDestroy {
   // upload flow state
   uploadState: UploadState = 'idle';
   progress = 0;
-
-  // feedback
-  showAlert = false;
-  alertColor: AlertColor = 'info';
-  alertMessage = '';
 
   // step 1 (file selection)
   isDragOver = false;
@@ -43,14 +40,18 @@ export class UploadComponent implements OnDestroy {
 
   @ViewChild('videoPlayer') videoPlayer?: ElementRef<HTMLVideoElement>;
 
-  constructor(private videoService: VideoService, private router: Router) {}
+  constructor(
+    private videoService: VideoService,
+    private router: Router,
+    private alert: AlertService,
+  ) {}
 
   // ---- Step 1: select / drop the video -------------------------------------
 
   storeFile(event: Event): void {
     this.isDragOver = false;
 
-    let file: File | null = null;
+    let file: File | null;
     if (event instanceof DragEvent) {
       file = event.dataTransfer?.files.item(0) ?? null;
     } else {
@@ -61,12 +62,9 @@ export class UploadComponent implements OnDestroy {
     if (!file) return;
 
     if (file.type !== 'video/mp4') {
-      this.showAlert = true;
-      this.alertColor = 'error';
-      this.alertMessage = 'Only MP4 videos are supported.';
+      this.alert.error('Only MP4 videos are supported.');
       return;
     }
-    this.showAlert = false;
 
     this.resetPreview();
     this.videoFile = file;
@@ -107,9 +105,7 @@ export class UploadComponent implements OnDestroy {
       this.thumbnailPreviewUrl = this.thumbnailObjectUrl;
     } catch (err) {
       console.error('Thumbnail capture failed', err);
-      this.showAlert = true;
-      this.alertColor = 'error';
-      this.alertMessage = 'Could not capture a thumbnail from this video.';
+      this.alert.error('Could not capture a thumbnail from this video.');
     }
   }
 
@@ -130,7 +126,8 @@ export class UploadComponent implements OnDestroy {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, 'image/jpeg', 0.8));
+      canvas.toBlob(resolve, 'image/jpeg', 0.8),
+    );
     if (!blob) return null;
 
     return new File([blob], 'thumbnail.jpg', { type: 'image/jpeg' });
@@ -158,9 +155,7 @@ export class UploadComponent implements OnDestroy {
       title: this.title.value ?? '',
     } as IVideoVm;
 
-    this.showAlert = true;
-    this.alertColor = 'info';
-    this.alertMessage = 'Please wait — your clip is being uploaded.';
+    this.alert.info('Please wait — your clip is being uploaded.');
     this.uploadState = 'uploading';
     this.progress = 0;
 
@@ -170,8 +165,7 @@ export class UploadComponent implements OnDestroy {
           this.progress = Math.round((100 * event.loaded) / event.total);
         } else if (event.type === HttpEventType.Response) {
           this.uploadState = 'done';
-          this.alertColor = 'success';
-          this.alertMessage = 'Upload complete! Redirecting...';
+          this.alert.success('Upload complete! Redirecting...');
           if (event.body?.id != null) {
             this.router.navigate(['/clip', event.body.id]);
           }
@@ -179,10 +173,9 @@ export class UploadComponent implements OnDestroy {
       },
       error: (err) => {
         this.uploadState = 'error';
-        this.alertColor = 'error';
-        this.alertMessage = typeof err?.error === 'string'
-          ? err.error
-          : 'Upload failed. Please try again.';
+        this.alert.error(
+          typeof err?.error === 'string' ? err.error : 'Upload failed. Please try again.',
+        );
         this.progress = 0;
       },
     });

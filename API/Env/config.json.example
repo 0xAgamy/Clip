@@ -1,19 +1,23 @@
 {
-    "ConnectionStrings": {
-    "DefaultConnection": ""
-    },
-    "JWT": {
-    "Key": "",
-    "ExpiredInDays": 1,
-    "Issuer": ""
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=clip_db;Username=clip_user;Password=clip_password"
   },
-
+  "JWT": {
+    "Key": "",
+    "LifetimeMinutes": 1440,
+    "Issuer": "https://localhost:7120",
+    "Audience": "https://localhost:7120"
+  },
   "S3": {
-  "ServiceUrl": "",
-  "AccessKey": "",
-  "SecretKey": "",
-  "BucketName": "",
-  "ForcePathStyle": true,
-  "PresignExpiryMinutes": 120
-}
+    "ServiceUrl": "http://localhost:9000",
+    "AccessKey": "",
+    "SecretKey": "",
+    "BucketName": "clips-videos",
+    "ForcePathStyle": true,
+    "UseHttp": true,
+    "PresignExpiryMinutes": 120
+  },
+  "Cors": {
+    "AllowedOrigins": ["http://localhost:4200"]
+  }
 }

@@ -1,0 +1,13 @@
+@if (alertService.visible()) {
+  <app-alert [alertColor]="alertService.color()">
+    <span class="flex-1">{{ alertService.message() }}</span>
+    <button
+      type="button"
+      class="flex h-6 w-6 items-center justify-center rounded-md text-white/70 transition hover:bg-white/10 hover:text-white"
+      aria-label="Dismiss"
+      (click)="alertService.dismiss()"
+    >
+      &#x2715;
+    </button>
+  </app-alert>
+}

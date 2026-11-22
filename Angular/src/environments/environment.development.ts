@@ -1,4 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: "https://localhost:7120",
+  // Empty on purpose: dev requests go to /api/... and are forwarded to the API
+  // by proxy.conf.json, so the browser never talks to the dev certificate directly.
+  apiBaseUrl: '',
 };

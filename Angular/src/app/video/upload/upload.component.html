@@ -1,6 +1,5 @@
 <section class="page-container py-8">
   <div class="mx-auto max-w-3xl">
-
     <div class="mb-6">
       <h1 class="section-title">Upload video</h1>
       <p class="muted mt-1 text-sm">Share your best gaming moment in two quick steps.</p>
@@ -9,27 +8,32 @@
     <!-- Steps -->
     <ol class="mb-6 flex items-center gap-3 text-sm font-medium">
       <li class="flex items-center gap-2" [ngClass]="!nextStep ? 'text-white' : 'text-gray-500'">
-        <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold"
-          [ngClass]="!nextStep ? 'bg-indigo-500 text-white' : 'bg-white/5 text-gray-400 ring-1 ring-white/10'">1</span>
+        <span
+          class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold"
+          [ngClass]="
+            !nextStep ? 'bg-indigo-500 text-white' : 'bg-white/5 text-gray-400 ring-1 ring-white/10'
+          "
+          >1</span
+        >
         Select file
       </li>
       <li class="h-px flex-1 bg-white/10"></li>
       <li class="flex items-center gap-2" [ngClass]="nextStep ? 'text-white' : 'text-gray-500'">
-        <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold"
-          [ngClass]="nextStep ? 'bg-indigo-500 text-white' : 'bg-white/5 text-gray-400 ring-1 ring-white/10'">2</span>
+        <span
+          class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold"
+          [ngClass]="
+            nextStep ? 'bg-indigo-500 text-white' : 'bg-white/5 text-gray-400 ring-1 ring-white/10'
+          "
+          >2</span
+        >
         Details
       </li>
     </ol>
 
     <div class="surface-card p-6">
-
-      @if (showAlert) {
-        <div class="mb-5">
-          <app-alert [alertColor]="alertColor">
-            {{ alertMessage }}
-          </app-alert>
-        </div>
-      }
+      <div class="mb-5">
+        <app-form-alert />
+      </div>
 
       <!-- Step 1: Drop your file -->
       @if (!nextStep) {
@@ -38,7 +42,8 @@
           type="file"
           accept="video/mp4"
           (change)="storeFile($event)"
-          class="hidden">
+          class="hidden"
+        />
         <div
           app-event-blocker
           (click)="fileInput.click()"
@@ -48,10 +53,9 @@
           (dragleave)="isDragOver = false"
           (mouseleave)="isDragOver = false"
           (drop)="storeFile($event)"
-          [ngClass]="{'border-indigo-400 bg-indigo-500/10': isDragOver}"
-          class="flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed
-            border-white/20 px-6 py-16 text-center transition duration-300
-            hover:border-indigo-400 hover:bg-indigo-500/5">
+          [ngClass]="{ 'border-indigo-400 bg-indigo-500/10': isDragOver }"
+          class="flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/20 px-6 py-16 text-center transition duration-300 hover:border-indigo-400 hover:bg-indigo-500/5"
+        >
           <span class="material-icons mb-3 text-5xl text-indigo-400">movie</span>
           <h5 class="text-lg font-semibold text-white">Click to select or drop your file here</h5>
           <p class="muted mt-1 text-sm">MP4 only</p>
@@ -66,16 +70,25 @@
             [src]="videoPreviewUrl"
             (loadeddata)="onVideoLoaded()"
             controls
-            class="aspect-video w-full rounded-xl bg-black"></video>
+            class="aspect-video w-full rounded-xl bg-black"
+          ></video>
         </div>
 
         <form [formGroup]="videoForm" (ngSubmit)="uploadVideo()">
-          <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">Thumbnail</h2>
+          <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">
+            Thumbnail
+          </h2>
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div class="flex aspect-video items-center justify-center overflow-hidden rounded-xl ring-2 ring-green-400/70">
+            <div
+              class="flex aspect-video items-center justify-center overflow-hidden rounded-xl ring-2 ring-green-400/70"
+            >
               @if (thumbnailPreviewUrl) {
-                <img [src]="thumbnailPreviewUrl" alt="Thumbnail preview" class="h-full w-full object-cover">
+                <img
+                  [src]="thumbnailPreviewUrl"
+                  alt="Thumbnail preview"
+                  class="h-full w-full object-cover"
+                />
               } @else {
                 <p class="p-4 text-center text-sm text-gray-400">Capturing thumbnail...</p>
               }
@@ -92,12 +105,20 @@
           <!-- Title -->
           <div class="mt-6">
             <label class="form-label" for="upload-title">Title</label>
-            <input id="upload-title" formControlName="title" type="text" class="input-field"
-              placeholder="Give your clip a title">
-            @if (videoForm.controls.title?.errors?.['required']) {
+            <input
+              id="upload-title"
+              formControlName="title"
+              type="text"
+              class="input-field"
+              placeholder="Give your clip a title"
+            />
+            @if (videoForm.controls.title.errors?.['required']) {
               <p class="form-error">The field is required</p>
             }
-            @if (!videoForm.controls.title?.errors?.['required'] && videoForm.controls.title?.errors?.['minlength']) {
+            @if (
+              !videoForm.controls.title.errors?.['required'] &&
+              videoForm.controls.title.errors?.['minlength']
+            ) {
               <p class="form-error">The field must contain 3 characters at least</p>
             }
           </div>
@@ -110,7 +131,10 @@
                 <span>{{ progress }}%</span>
               </div>
               <div class="h-2.5 w-full overflow-hidden rounded-full bg-white/10">
-                <div class="h-full rounded-full bg-indigo-500 transition-all" [style.width.%]="progress"></div>
+                <div
+                  class="h-full rounded-full bg-indigo-500 transition-all"
+                  [style.width.%]="progress"
+                ></div>
               </div>
             </div>
           }
@@ -122,7 +146,8 @@
             <button
               [disabled]="uploadState === 'uploading' || videoForm.invalid || !thumbnailPreviewUrl"
               type="submit"
-              class="btn btn-primary">
+              class="btn btn-primary"
+            >
               <span class="material-icons text-base">publish</span>
               Publish
             </button>

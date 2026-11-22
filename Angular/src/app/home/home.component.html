@@ -1,51 +1,53 @@
-  <!-- Intro Section -->
-  <section class="relative overflow-hidden">
-    <!-- The video -->
-    <video autoplay muted loop playsinline class="absolute inset-0 h-full w-full object-cover z-0">
-      <source src="assets/video/hero.webm" type="video/webm">
-    </video>
+<!-- Intro Section -->
+<section class="relative overflow-hidden">
+  <!-- The video -->
+  <video autoplay muted loop playsinline class="absolute inset-0 z-0 h-full w-full object-cover">
+    <source src="assets/video/hero.webm" type="video/webm" />
+  </video>
 
-    <div class="bg-gradient absolute inset-0 z-40 opacity-70"></div>
+  <div class="bg-gradient absolute inset-0 z-40 opacity-70"></div>
 
-    <div class="absolute inset-0 z-40">
-      <div class="cube"></div>
-      <div class="cube"></div>
-      <div class="cube"></div>
-      <div class="cube"></div>
-      <div class="cube"></div>
-    </div>
+  <div class="absolute inset-0 z-40">
+    <div class="cube"></div>
+    <div class="cube"></div>
+    <div class="cube"></div>
+    <div class="cube"></div>
+    <div class="cube"></div>
+  </div>
 
-    <div class="page-container relative z-50">
-      <div class="mx-auto max-w-3xl py-24 text-center sm:py-32 lg:py-40">
-        <span class="badge mb-6">Watch &middot; Clip &middot; Share</span>
-        <h1 class="text-4xl font-bold uppercase leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
-          Clip it and ship it!
-        </h1>
-        <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-gray-200/90 sm:text-lg">
-          The #1 app to watch, clip, and share your awesome gaming moments
-          with your friends and the world! With our world-class tools, we make
-          it incredibly easy to share your videos. Get started today!
-        </p>
-        <div class="mt-10 flex flex-wrap justify-center gap-3">
-          <a routerLink="/upload" class="btn btn-primary px-7 py-3 text-base">
-            <span class="material-icons text-base">cloud_upload</span>
-            Upload a clip
-          </a>
-          <a href="#latest" class="btn btn-ghost px-7 py-3 text-base">Browse clips</a>
-        </div>
+  <div class="page-container relative z-50">
+    <div class="mx-auto max-w-3xl py-24 text-center sm:py-32 lg:py-40">
+      <span class="badge mb-6">Watch &middot; Clip &middot; Share</span>
+      <h1
+        class="text-4xl font-bold uppercase leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl"
+      >
+        Clip it and ship it!
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-gray-200/90 sm:text-lg">
+        The #1 app to watch, clip, and share your awesome gaming moments with your friends and the
+        world! With our world-class tools, we make it incredibly easy to share your videos. Get
+        started today!
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <a routerLink="/upload" class="btn btn-primary px-7 py-3 text-base">
+          <span class="material-icons text-base">cloud_upload</span>
+          Upload a clip
+        </a>
+        <a href="#latest" class="btn btn-ghost px-7 py-3 text-base">Browse clips</a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Main Content -->
-  <section id="latest" class="page-container py-12 sm:py-16">
-    <div class="mb-8 flex flex-wrap items-end justify-between gap-3 border-b border-white/5 pb-5">
-      <div>
-        <h2 class="section-title">Latest clips</h2>
-        <p class="muted mt-1 text-sm">Fresh highlights from the community</p>
-      </div>
-      <a routerLink="/manage" class="nav-link hidden sm:inline-flex">Manage yours &rarr;</a>
+<!-- Main Content -->
+<section id="latest" class="page-container py-12 sm:py-16">
+  <div class="mb-8 flex flex-wrap items-end justify-between gap-3 border-b border-white/5 pb-5">
+    <div>
+      <h2 class="section-title">Latest clips</h2>
+      <p class="muted mt-1 text-sm">Fresh highlights from the community</p>
     </div>
+    <a routerLink="/manage" class="nav-link hidden sm:inline-flex">Manage yours &rarr;</a>
+  </div>
 
-    <app-clips-list></app-clips-list>
-  </section>
+  <app-clips-list></app-clips-list>
+</section>

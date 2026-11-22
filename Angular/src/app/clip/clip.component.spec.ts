@@ -11,10 +11,9 @@ describe('ClipComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ClipComponent ],
-      providers: [ provideHttpClient(), provideHttpClientTesting(), provideRouter([]) ],
-    })
-    .compileComponents();
+      declarations: [ClipComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ClipComponent);
     component = fixture.componentInstance;

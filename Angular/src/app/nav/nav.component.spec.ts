@@ -11,10 +11,9 @@ describe('NavComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavComponent ],
-      providers: [ provideHttpClient(), provideHttpClientTesting(), provideRouter([]) ],
-    })
-    .compileComponents();
+      declarations: [NavComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(NavComponent);
     component = fixture.componentInstance;

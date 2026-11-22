@@ -1,18 +1,21 @@
 <section class="page-container py-8">
   <div class="mx-auto max-w-3xl">
-
     @if (Video) {
       <div class="mb-6">
         <h1 class="section-title">Edit video</h1>
-        <p class="muted mt-1 truncate text-sm">{{Video.title}}</p>
+        <p class="muted mt-1 truncate text-sm">{{ Video.title }}</p>
       </div>
 
       <div class="surface-card p-6">
-
         <!-- Video Player -->
         <div class="mb-6">
-          <video #capture [src]="Video.videoUrl" type="video/mp4" controls
-            class="aspect-video w-full rounded-xl bg-black"></video>
+          <video
+            #capture
+            [src]="Video.videoUrl"
+            type="video/mp4"
+            controls
+            class="aspect-video w-full rounded-xl bg-black"
+          ></video>
         </div>
 
         <!-- Form -->
@@ -20,28 +23,34 @@
           <!-- Title -->
           <div>
             <label class="form-label" for="edit-title">Title</label>
-            <input id="edit-title" formControlName="title" [placeholder]="TitleName" type="text" class="input-field">
-            @if (videoForm.controls.title?.errors?.['required']) {
+            <input
+              id="edit-title"
+              formControlName="title"
+              [placeholder]="TitleName"
+              type="text"
+              class="input-field"
+            />
+            @if (videoForm.controls.title.errors?.['required']) {
               <p class="form-error">The Field is Required</p>
             }
-            @if (!videoForm.controls.title?.errors?.['required'] && videoForm.controls.title?.errors?.['minlength']) {
+            @if (
+              !videoForm.controls.title.errors?.['required'] &&
+              videoForm.controls.title.errors?.['minlength']
+            ) {
               <p class="form-error">The Field Must Contain 3 characters at least</p>
             }
           </div>
 
-          @if (showAlert) {
-            <div class="mt-4">
-              <app-alert [alertColor]="alertColor">
-                {{alertMesg}}
-              </app-alert>
-            </div>
-          }
+          <div class="mt-4">
+            <app-form-alert />
+          </div>
 
           <div class="mt-8 flex justify-end">
             <button
               [disabled]="videoForm.invalid || inSubmission"
               type="submit"
-              class="btn btn-primary">
+              class="btn btn-primary"
+            >
               @if (inSubmission) {
                 <span class="material-icons animate-spin text-base">progress_activity</span>
                 Saving...
@@ -54,6 +63,5 @@
         </form>
       </div>
     }
-
   </div>
 </section>

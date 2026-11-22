@@ -1,21 +1,28 @@
 <!-- Clips List -->
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
   @for (video of Videos; track video.id) {
-    <a [routerLink]="['clip',video.id]"
-      class="group relative flex flex-col overflow-hidden rounded-2xl bg-[#1e2638] ring-1 ring-white/5 transition duration-300 hover:-translate-y-1.5 hover:ring-indigo-400/40 hover:shadow-2xl hover:shadow-indigo-500/10">
-
+    <a
+      [routerLink]="['clip', video.id]"
+      class="group relative flex flex-col overflow-hidden rounded-2xl bg-[#1e2638] ring-1 ring-white/5 transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/10 hover:ring-indigo-400/40"
+    >
       <!-- Thumbnail -->
       <div class="relative aspect-video overflow-hidden bg-[#131a29]">
-        <img class="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-110"
-          [src]="video.thumbnailUrl" [alt]="video.title">
+        <img
+          class="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-110"
+          [src]="video.thumbnailUrl"
+          [alt]="video.title"
+        />
 
         <!-- Readability overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-[#0b1020] via-[#0b1020]/20 to-transparent"></div>
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-[#0b1020] via-[#0b1020]/20 to-transparent"
+        ></div>
 
         <!-- Play affordance -->
         <span class="absolute inset-0 flex items-center justify-center">
-          <span class="flex h-14 w-14 scale-75 items-center justify-center rounded-full bg-white/10 text-white opacity-0 ring-1 ring-white/30 backdrop-blur-md transition-all duration-300 group-hover:scale-100 group-hover:bg-indigo-500 group-hover:opacity-100">
+          <span
+            class="flex h-14 w-14 scale-75 items-center justify-center rounded-full bg-white/10 text-white opacity-0 ring-1 ring-white/30 backdrop-blur-md transition-all duration-300 group-hover:scale-100 group-hover:bg-indigo-500 group-hover:opacity-100"
+          >
             <span class="material-icons">play_arrow</span>
           </span>
         </span>
@@ -23,25 +30,30 @@
 
       <!-- Body -->
       <div class="relative flex flex-1 flex-col gap-4 p-5">
-        <h2 class="line-clamp-2 text-base font-semibold leading-snug text-white transition-colors duration-200 group-hover:text-indigo-300">
-          {{video.title}}
+        <h2
+          class="line-clamp-2 text-base font-semibold leading-snug text-white transition-colors duration-200 group-hover:text-indigo-300"
+        >
+          {{ video.title }}
         </h2>
 
         <!-- Author + date -->
         <div class="mt-auto flex items-center gap-2.5">
-          <span class="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-indigo-500/20 text-sm font-bold uppercase text-indigo-300 ring-1 ring-inset ring-indigo-400/30">
+          <span
+            class="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-indigo-500/20 text-sm font-bold uppercase text-indigo-300 ring-1 ring-inset ring-indigo-400/30"
+          >
             {{ video.userName.charAt(0) }}
           </span>
           <div class="min-w-0">
             <p class="truncate text-sm font-medium text-gray-200">{{ video.userName }}</p>
-            <p class="text-xs text-gray-500">{{video.created | date:'mediumDate'}}</p>
+            <p class="text-xs text-gray-500">{{ video.created | date: 'mediumDate' }}</p>
           </div>
-          <span class="material-icons ml-auto flex-none text-lg text-gray-600 transition duration-300 group-hover:translate-x-0.5 group-hover:text-indigo-400">
+          <span
+            class="material-icons ml-auto flex-none text-lg text-gray-600 transition duration-300 group-hover:translate-x-0.5 group-hover:text-indigo-400"
+          >
             arrow_forward
           </span>
         </div>
       </div>
     </a>
   }
-
 </div>
