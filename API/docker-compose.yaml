@@ -4,7 +4,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - Env/.env.postgres
+      - ./src/Clips.Api/Env/.env.postgres
     restart: unless-stopped
     volumes:
       - /postgres_data:/var/lib/postgresql/data
@@ -17,7 +17,7 @@ services:
       - "9000:9000"   # S3 API endpoint
       - "9001:9001"   # MinIO Web Console
     env_file:
-      - ./Env/.env.minio
+      - ./src/Clips.Api/Env/.env.minio
     volumes:
       - minio_data:/data
     user: "0:0"

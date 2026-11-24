@@ -58,6 +58,6 @@ appsettings.*.local.json
 *.tmp
 # ___________
 
-Env/*.json
+**/Env/*.json
 postgres_data/
 Resources/
