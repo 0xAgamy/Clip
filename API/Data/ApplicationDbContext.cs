@@ -14,8 +14,21 @@ namespace Clips_api.Data
         {
             base.OnModelCreating(builder);
             builder.Entity<Video>().ToTable("Videos");
+            builder.Entity<Game>().ToTable("Games");
+            builder.Entity<Comment>().ToTable("Comments");
+            builder.Entity<Like>().ToTable("Likes");
+
+            builder.Entity<Follow>().ToTable("Follows");
+            builder.Entity<Playlist>().ToTable("Playlists");
+            builder.Entity<PlaylistItem>().ToTable("PlaylistItems");
+
+            builder.Entity<Tag>().ToTable("Tags");
+            builder.Entity<VideoTag>().ToTable("VideoTags");
+            builder.Entity<VideoRendition>().ToTable("VideoRenditions");
+
+            builder.Entity<Notification>().ToTable("Notifications");
+            builder.Entity<RefreshToken>().ToTable("RefreshTokens");            
         }
-        
-        // public DbSet<Video> Videos { get; set; }
+
     }
 }
